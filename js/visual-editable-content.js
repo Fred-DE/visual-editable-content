@@ -54,13 +54,6 @@ var pluginDirUrl;
 	}
 })(jQuery);
 
-// Fonction appelée depuis l'iframe. Permet de récupérer le nouveau DOM
-/*function returnVisualEditableContent(param)
-{
-	alert(pluginDirUrl);
-	jQuery("#visual-editable-content-editor").css({"border": "1px solid red"});
-}*/
-
 // On récupère les modifications, on les traite et on valide (insert dans le textarea WordPress)
 function saveVisualEditableContent(data)
 {
@@ -70,6 +63,9 @@ function saveVisualEditableContent(data)
 	var mainTextareaContent = jQuery("textarea#content").val(); // On récupère tout le contenu du textarea Wordpress
 	
 	mainTextareaContent = '<div id="visual-editable-content-container">'+ mainTextareaContent +'</div>'; // On entoure ce contenu d'une div (string)
+	
+	
+	
 	
 	
 	// On récupère les balises 'script' en string
@@ -87,7 +83,7 @@ function saveVisualEditableContent(data)
 			indexStart = indexScriptEnd;
 			
 			var scriptTagString = mainTextareaContent.substring(indexScriptStart, indexScriptEnd);
-			// scriptsArray.push(scriptTagString);
+			
 			scriptsArray[scriptsArray.length] = new Array();
 			scriptsArray[scriptsArray.length-1]["script"] = scriptTagString;
 			
@@ -123,8 +119,8 @@ function saveVisualEditableContent(data)
 		}
 	}
 	
-	// console.log(arrayIndexClass);
-	// console.log(minDiffBetweenClassAndScript);
+	
+	
 	
 	mainTextareaContent = jQuery.parseHTML(mainTextareaContent); // On transforme la chaîne de caractères en objet HTML
 	
@@ -157,6 +153,10 @@ function saveVisualEditableContent(data)
 	});
 	
 	jQuery(mainTextareaContent).find("[data-vec='content']").unwrap(); // On enlève la div que l'on a ajouté autour du vec="content"
+	
+	
+	
+	
 	
 	// On rajoute les balises 'script' (au cas où il y en ait)
 	for (var i = 0; i < scriptsArray.length; i++)
@@ -209,16 +209,10 @@ function saveVisualEditableContent(data)
 			script.text = contentScript;
 		}
 		
-		// jQuery(mainTextareaContent).find("[data-vec='content']").append(script); // On ajoute les scripts à la fin de la page
 		jQuery(mainTextareaContent).find("."+ scriptsArray[i]["class"]).append(script); // On ajoute les scripts à la fin de la page
 	}
-	// console.log(jQuery(mainTextareaContent).html());
 	
-	// mainTextareaContent = jQuery("textarea#content").val();
-	// var tmpTxt = new Object();
-	// var truc = jQuery("textarea#content").html('<div id="test">'+ jQuery(mainTextareaContent).html() +'</div>').html();
-	// var truc = jQuery(mainTextareaContent).html();
-	// console.log(jQuery(mainTextareaContent).html());
+	
 	
 	
 	jQuery("textarea#content").val(jQuery(mainTextareaContent).html()); // On insert le contenu dans le textarea Wordpress
@@ -226,11 +220,6 @@ function saveVisualEditableContent(data)
 
 function getHtmlWithGoodAttr(vecNode)
 {
-	/*console.log(jQuery(vecNode).attr("data-vec-attr-remove"));
-	// console.log(jQuery(vecNode).attributes);
-	if (typeof(jQuery(vecNode).attr("data-vec-attr-remove")) != "undefined")
-		console.log(jQuery(vecNode).attr("data-vec-attr-remove"));*/
-	
 	jQuery(vecNode).find("[data-vec-attr-remove]").each(function()
 	{
 		var stringAttr = jQuery(this).attr("data-vec-attr-remove");
@@ -246,8 +235,6 @@ function getHtmlWithGoodAttr(vecNode)
 			else
 				jQuery(this).removeAttr(arrayAttr[i]);
 		}
-		
-		// jQuery(this).removeAttr("[data-vec-attr-remove]");
 	});
 	
 	jQuery(vecNode).find("*").removeAttr("data-vec-attr-remove");
@@ -271,7 +258,6 @@ function openLinksPopin()
 	
 	
 	wpLink.open("content");
-	// wpLink.open(jQuery("#visual-editable-content-editor").contents().find("#editor").attr("id"));
 	
 	jQuery("#wp-link-submit").off("click");
 	jQuery("#wpwrap").off("click", "#wp-link-submit");
@@ -282,17 +268,11 @@ function openLinksPopin()
 		event.stopImmediatePropagation();
 		
 		var linkAtts = wpLink.getAttrs(); // the links attributes (href, target) are stored in an object, which can be access via  wpLink.getAttrs()
-		// jQuery('your_url_textfield').val(linkAtts.href); // get the href attribute and add to a textfield, or use as you see fit
+		
 		wpLink.textarea = jQuery("#visual-editable-content-editor"); // to close the link dialogue, it is again expecting an wp_editor instance, so you need to give it something to set focus back to. In this case, I'm using body, but the textfield with the URL would be fine
 		wpLink.close(); //close the dialogue
 		
-		// console.log(linkAtts);
-		
-		// Trap any events
-		// event.preventDefault ? event.preventDefault() : event.returnValue = false;
-		
 		jQuery("#visual-editable-content-editor")[0].contentWindow.setVecLink(linkAtts.href, linkAtts.target);
-		// document.getElementById("visual-editable-content-editor").contentWindow.setVecLink();
 		
 		return false;
 	});

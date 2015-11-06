@@ -1,7 +1,3 @@
-/*var wpLinkL10n;
-var inputs;
-var h;*/
-
 var setVecLink;
 
 (function($)
@@ -15,8 +11,6 @@ var setVecLink;
 	
 	var newLinkTarget = "";
 	
-	//var selectionStart;
-	
 	
 	$(document).ready(function()
 	{
@@ -27,12 +21,6 @@ var setVecLink;
 
 	function initVisualEditableContentEditor()
 	{
-		//$("body").append('<div id="visual-editable-content-overlay"></div>');
-		//$("body").append('<div id="visual-editable-content-txt-editor" class="visual-editable-content-popin"><p class="visual-editable-content-popin-title">Édition du texte</p> <textarea name="visual-editable-content-txt-editor-textarea"></textarea> <div class="visual-editable-content-buttons"><div id="visual-editable-content-txt-validate" class="visual-editable-content-button"><span>Valider</span></div><div id="visual-editable-content-txt-cancel" class="visual-editable-content-button visual-editable-content-button-cancel"><span>Annuler</span></div></div>');
-		
-		//console.log(visualEditableContentVariables.path);
-		//console.log(visualEditableContentPath);
-		
 		$.ajax(
 		{
 			url: visualEditableContentPath +"layout.html",
@@ -50,7 +38,12 @@ var setVecLink;
 			}
 		});
 		
-		// On regarde ce que crée les 'execCommand' sur le navigateur courant et on stocke les résultats dans un tableau
+		checkExecCommand();
+	}
+	
+	// On regarde ce que crée les 'execCommand' sur le navigateur courant et on stocke les résultats dans un tableau
+	function checkExecCommand()
+	{
 		$("body").append('<div id="vec-tmp" contenteditable="true">testvec</div>');
 		selectText("vec-tmp");
 		document.execCommand("bold", false, null);
@@ -74,6 +67,7 @@ var setVecLink;
 		
 		$("#vec-tmp").remove();
 	}
+	
 	
 	function selectText(element)
 	{
@@ -130,18 +124,11 @@ var setVecLink;
 			savedSelection = saveSelection();
 			
 			parent.openLinksPopin();
-			
-			// console.log(linkInfos);
-			
-			
-			
-			// document.execCommand("CreateLink", false, "http://stackoverflow.com/");
 		});
 		
 		setVecLink = function(href, target)
 		{
 			newLinkTarget = target;
-			// console.log(href);
 			
 			restoreSelection(savedSelection);
 			
@@ -153,22 +140,6 @@ var setVecLink;
 		{
 			document.execCommand("unlink", false, false);
 		});
-		
-		
-		
-		/*$("#wp-link-submit").on("click", function(event)
-		{
-			console.log("yo");
-			
-			// var linkAtts = window.parent.wpLink.getAttrs();
-			// var targetID = window.parent.wpLink.newattr.replace('add_link_button_', '');
-		});*/
-		
-		/*$("#visual-editable-content-txt-editor").on("mouseup", "textarea", function()
-		{
-			console.log($(this));
-			console.log($(this)[0].selectionStart);
-		});*/
 		
 		// On clique sur une image éditable
 		$("[data-vec='content']").on("click", "[data-vec~='pic']", function(event)
@@ -194,12 +165,6 @@ var setVecLink;
 			$("[data-vec='content']").unwrap();
 		});
 		
-		
-		// On veut fermer le module (pas utilisé finalement)
-		/*$("body").on("click", "#visual-editable-content-global-close", function()
-		{
-			parent.closeVisualEditableContent($("[data-vec='content']").html());
-		});*/
 		
 		addEventDomAttrModified(); // On enlève la possibilité d'ajouter des attributs style aux balises
 		
@@ -285,39 +250,8 @@ var setVecLink;
 	
 	function addEventDomAttrModified()
 	{
-		// On détecte le changement de DOM -> on veut empêcher l'ajout d'attributs style
-		/*$("[data-vec='content'] *").on("DOMAttrModified", function(event)
-		{
-			if (event.originalEvent.attrName == "style")
-			{
-				if ($(event.currentTarget).attr("style") !== undefined)
-				{
-					removeEventDomAttrModified(); // On désactive l'écouteur sur l'évènement le temps de faire notre manipulation
-					
-					//console.log(event);
-					
-					var currentStyle = event.originalEvent.prevValue;
-					//console.log(currentStyle);
-					$(event.currentTarget).removeAttr("style");
-					if (currentStyle != "")
-						$(event.currentTarget).attr("style", currentStyle);
-					
-					addEventDomAttrModified();
-				}
-			}
-		});*/
-		
-		// $("[data-vec='content'] *").on("DOMAttrModified", function(event)
 		$("[data-vec='content'] [data-vec~='txt'], [data-vec='content'] [data-vec~='txt'] *, [data-vec='content'] [data-vec~='pic'], [data-vec='content'] [data-vec~='pic'] *").on("DOMAttrModified", function(event)
 		{
-			/*if (event.originalEvent.attrName == "style")
-			{
-				if ($(event.currentTarget).attr("style") !== undefined)
-				{
-					$(this).attr("data-vec-attr-remove", "style");
-				}
-			}*/
-			
 			if (!(event.originalEvent.attrName == "src" && $(this).attr("data-vec").indexOf("pic") != -1)) // Si ce n'est pas la source d'une image que l'on modifie
 			{
 				if ($(event.currentTarget).attr(event.originalEvent.attrName) !== undefined)
@@ -337,29 +271,14 @@ var setVecLink;
 						
 						if (event.originalEvent.prevValue != "") // Si l'attribut existait déjà et avait une valeur
 						{
-							// console.log(event.originalEvent.attrName);
 							$(this).attr("data-vec-tmp-"+ event.originalEvent.attrName, event.originalEvent.prevValue);
 						}
 					}
-					
-					// console.log($(this).attr(event.originalEvent.attrName));
-					// console.log(event);
 					
 					addEventDomAttrModified();
 				}
 			}
 		});
-		
-		// $("body *").on("DOMAttrModified", function(event)
-		// {
-			// console.log("a");
-			// console.log(event.originalEvent);
-		// });
-		
-		// $("#visual-editable-content-txt-editor").on("DOMAttrModified", "#editor *", function(event)
-		// {
-			// console.log(event.originalEvent);
-		// });
 	}
 	
 	function removeEventDomAttrModified()
@@ -412,50 +331,12 @@ var setVecLink;
 		
 		$("#visual-editable-content-txt-editor .editor").on("paste", function(event)
 		{
-			// console.log(event);
 			event.preventDefault();
 			
-			// console.log(window.clipboardData.getData("text"));
 			var textPaste = (event.originalEvent.clipboardData || window.clipboardData).getData("text");
-			// (event.originalEvent.clipboardData || window.clipboardData).setData("text", textPaste);
-			// event.target.value = textPaste;
+			
 			document.execCommand('insertText', false, textPaste);
-
-
-			// console.log(textPaste);
-			// var paste = event;
-			
-			// var timerPaste = setTimeout(function()
-			// {
-				// console.log(paste.originalEvent.clipboardData.getData("text"));
-			// }, 1000);
-			
-			// var text = (event.originalEvent || event).clipboardData.getData("text/html");
-			// console.log(text);
 		});
-		
-		/*$("#visual-editable-content-txt-editor").on("select", "textarea", function()
-		{
-			if (window.getSelection)
-			{
-				txt = window.getSelection();
-			}
-			else if (document.getSelection)
-			{
-				txt = document.getSelection();
-			}
-			else if (document.selection)
-			{
-				txt = document.selection.createRange().text;
-			}
-			
-			//console.log(txt);
-		});*/
-		
-		/*$("#visual-editable-content-txt-editor").on("mouseup", "textarea", function()
-		{
-			console.log(window.getSelection().toString());
-		});*/
 	}
 	
 	// Fonction permettant de gérer la popin d'édition d'une image
@@ -472,10 +353,6 @@ var setVecLink;
 		$("#visual-editable-content-pic-editor").off("click", "#visual-editable-content-pic-selector");
 		$("#visual-editable-content-pic-editor").on("click", "#visual-editable-content-pic-selector", function()
 		{
-			// window.parent.wp.media.editor.open($(this));
-			
-			
-			
 			var frame = window.parent.wp.media(
 			{
 				title: 'Sélectionner une image',
@@ -492,15 +369,6 @@ var setVecLink;
 			
 			frame.open($(this));
 			
-			// original_send = window.parent.wp.media.editor.send.attachment; // Je ne sais pas à quoi ça sert, mais je le laisse, on sait jamais
-			
-			// On valide la sélection de l'image
-			/*window.parent.wp.media.editor.send.attachment = function(a, dataPic)
-			{
-				console.log(a);
-				console.log(dataPic);
-				$("#visual-editable-content-pic-editor input[name='visual-editable-content-pic-editor-src']").val(dataPic.sizes.full.url);
-			};*/
 			frame.on("select", function(a, dataPic)
 			{
 				var attachment = frame.state().get('selection').first().toJSON();
@@ -528,122 +396,6 @@ var setVecLink;
 	// Fonction permettant d'entourer le texte sélectionné par une balise avec le style passé en paramètre
 	function visualEditableContentAddStyle(element, newClass)
 	{
-		/*var range = window.getSelection().getRangeAt(0);
-		
-		if (range.toString().length > 0) // S'il y a une sélection
-		{
-			var selectionStart = range.startOffset;
-			var selectionEnd = range.endOffset;
-			
-			var parentRange = range.commonAncestorContainer.parentElement;
-			
-			if (selectionStart == 0 && ($(parentRange).text().length == range.toString().length || selectionEnd == 0)) // Si l'utilisateur a sélectionné un texte juste entouré par une balise
-			{
-				if ($(parentRange).prop("tagName").toLowerCase() == "span")
-				{
-					if ($(parentRange).hasClass(newClass)) // Si le span parent a déjà la classe -> on la supprime
-						$(parentRange).removeClass(newClass);
-					else // Si le span parent n'a pas la classe -> on l'ajoute
-						$(parentRange).addClass(newClass);
-					
-					return false; // On s'arrête
-				}
-			}
-			
-			var selectedText = range.extractContents();
-			var preSelectionRange = range.cloneRange();
-			preSelectionRange.selectNodeContents(document.getElementById("editor"));
-			preSelectionRange.setEnd(range.startContainer, range.startOffset);
-			var start = preSelectionRange.toString().length;
-			var end = start + range.toString().length;
-			
-			var newNode = document.createElement("span");
-			$(newNode).addClass(newClass);
-			$(newNode).html(selectedText);
-			range.insertNode(newNode); // On insert la balise autour de la sélection
-		}*/
-		
-		// document.execCommand("insertHTML", false, '<span class="italic">test</span>');
 		document.execCommand(newClass, false, null);
-		// var listId = window.getSelection().focusNode.parentNode;
-		// var listId = getSelectionText().focusNode.parentNode;
-        // $(listId).addClass("vec-"+ newClass);
-		
-		
-		// Si on a une sélection dans le textarea
-		/*if (selectionStart > 0)
-		{
-			var selectionTmp;
-			if (selectionStart > selectionEnd)
-			{
-				selectionTmp = selectionEnd;
-				selectionEnd = selectionStart;
-				selectionStart = selectionTmp;
-			}
-			
-			// var textareaPart1 = $("#visual-editable-content-txt-editor textarea").val().substring(0, selectionStart);
-			// var textareaPart2 = $("#visual-editable-content-txt-editor textarea").val().substring(selectionStart, selectionEnd);
-			// var textareaPart3 = $("#visual-editable-content-txt-editor textarea").val().substring(selectionEnd, $("#visual-editable-content-txt-editor textarea").val().length);
-			
-			//console.log($("#visual-editable-content-txt-editor .editor").text());
-			var textareaPart1 = $("#visual-editable-content-txt-editor .editor").text().substring(0, selectionStart);
-			var textareaPart2 = $("#visual-editable-content-txt-editor .editor").text().substring(selectionStart, selectionEnd);
-			var textareaPart3 = $("#visual-editable-content-txt-editor .editor").text().substring(selectionEnd, $("#visual-editable-content-txt-editor .editor").text().length);
-			
-			// console.log(textareaPart1 +" || "+ textareaPart2)
-			
-			// var newTextareaVal = textareaPart1 +'<span class="'+ newClass +'">'+ textareaPart2 +'</span>'+ textareaPart3;
-			//$("#visual-editable-content-txt-editor textarea").val(newTextareaVal);
-			//console.log(newTextareaVal);
-			//$("#visual-editable-content-txt-editor .editor").html(newTextareaVal);
-		}*/
-	}
-	
-	function getSelectionText()
-	{
-		/*var valueSelected;
-		
-		if (window.getSelection)
-		{
-			try
-			{
-				var ta = $('textarea').get(0);
-				//return ta.value.substring(ta.selectionStart, ta.selectionEnd);
-				valueSelected = ta.value.substring(ta.selectionStart, ta.selectionEnd);
-			}
-			catch (e)
-			{
-				console.log('Cant get selection text')
-			}
-		}
-		// For IE
-		if (document.selection && document.selection.type != "Control")
-		{
-			//return document.selection.createRange().text;
-			valueSelected = document.selection.createRange().text;
-		}*/
-		
-		if (window.getSelection)
-		{
-			txt = window.getSelection();
-		}
-		else if (document.getSelection)
-		{
-			txt = document.getSelection();
-		}
-		else if (document.selection)
-		{
-			txt = document.selection.createRange().text;
-		}
-		
-		// console.log(valueSelected);
-		return txt;
 	}
 })(jQuery);
-
-/*function setVecLink(href)
-{
-	console.log(href);
-	
-	document.execCommand("CreateLink", false, href);
-}*/
