@@ -126,6 +126,63 @@ function saveVisualEditableContent(data)
 	
 	jQuery(mainTextareaContent).find("[data-vec='content']").wrap('<div id="visual-editable-content-container-vec-content"></div>'); // On entoure la balise avec l'attribut vec="content" d'une div
 	
+	
+	// Gestion des ajouts des 'ul'
+	jQuery(dataHtml).find("[data-vec-tmp='txt-ul']").each(function(index)
+	{
+		// console.log("text-ul");
+		// var dataVecPrev = jQuery(this).prevAll("[data-vec='txt']").index();
+		// var dataVecPrev = jQuery(this).prevAll("[data-vec~='txt']").first(); // On récupère le data-vec="txt" le plus proche positionné avant le ul courant
+		var allDataVecTxt = jQuery(dataHtml).find("[data-vec~='txt']");
+		var dataVecPrev = allDataVecTxt.eq(allDataVecTxt.index(this) - 1); // On récupère le data-vec="txt" le plus proche positionné avant le ul courant
+		
+		// console.log(dataVecPrev);
+		// var indexVecTxt = jQuery(dataHtml).index(dataVecPrev);
+		var indexVecTxt = jQuery(dataHtml).find("[data-vec~='txt']").index(dataVecPrev); // On récupère l'index du data-vec="txt" récupéré juste avant
+		// console.log(indexVecTxt);
+		indexVecTxt += 1; // On ajoute 1 à l'index, pour avoir l'index du data-vec="txt" à modifier
+		
+		var dataVecToReplace = jQuery(mainTextareaContent).find("#visual-editable-content-container-vec-content [data-vec~='txt']:eq("+ indexVecTxt +")"); // Noeud côté résultat
+		dataVecToReplace.html(jQuery(this).html()); // On insère le contenu du 1er 'p' (dont celui avant le 1er 'ul') dans le data-vec='txt
+		
+		
+		var elementToAdd; // Noeud côté éditable
+		elementToAdd = jQuery(this).next(); // On se positionne sur le 'ul'
+		var currentPositionHtml; // Noeud côté HTML résultat
+		currentPositionHtml = dataVecToReplace;
+		
+		// On rajoute les 'ul' et 'p' que l'on a dû rajouter
+		do
+		{
+			// console.log("do");
+			
+			jQuery(elementToAdd).wrap('<div></div>');
+			
+			currentPositionHtml.after(jQuery(elementToAdd).parent().html()); // On ajoute le 'ul' après
+			currentPositionHtml = currentPositionHtml.next(); // On se positionne sur le 'ul' (côté résultat)
+			
+			jQuery(elementToAdd).unwrap();
+			elementToAdd = elementToAdd.next(); // On se positionne sur l'élément après le 'ul' (côté éditable)
+			
+			// Si après le 'ul' (côté éditable) on a dû rajouter une balise 'p'
+			if (jQuery(elementToAdd).attr("data-vec-tmp") == "txt-ul-split")
+			{
+				// console.log("if");
+				jQuery(elementToAdd).wrap('<div></div>');
+				currentPositionHtml.after(jQuery(elementToAdd).parent().html()); // On rajoute après le 'ul' cette balise 'p'
+				
+				jQuery(elementToAdd).unwrap();
+				
+				elementToAdd = elementToAdd.next(); // On se positionne sur l'élément après le 'p' (côté éditable)
+				
+				currentPositionHtml = currentPositionHtml.next(); // On se positionne sur le 'p' que l'on vient d'ajouter (côté résultat)
+			}
+		} while(elementToAdd.length != 0 && jQuery(elementToAdd).get(0).tagName.toLowerCase() == "ul" && jQuery(elementToAdd).attr("data-vec-tmp") == "ul-tmp"); // Tant qu'il y a un 'ul' à ajouter
+	});
+	
+	// On enlève des noeuds vides
+	jQuery(mainTextareaContent).find("#visual-editable-content-container-vec-content [data-vec-tmp='txt-ul-split']:empty").remove();
+	
 	// On remplace les textes
 	jQuery(mainTextareaContent).find("#visual-editable-content-container-vec-content [data-vec~='txt']").each(function(index)
 	{
@@ -213,10 +270,12 @@ function saveVisualEditableContent(data)
 	}
 	
 	
+	mainTextareaContent = cleanupContent(mainTextareaContent);
 	
 	
-	jQuery("textarea#content").val(jQuery(mainTextareaContent).html()); // On insert le contenu dans le textarea Wordpress
+	jQuery("textarea#content").val(jQuery(mainTextareaContent).html()); // On insère le contenu dans le textarea Wordpress
 }
+
 
 function getHtmlWithGoodAttr(vecNode)
 {
@@ -291,6 +350,40 @@ function openLinksPopin()
 		
 		return false;
 	});
+}
+
+
+function cleanupContent(contentToCleanup)
+{
+	// Nettoyages des 'ul' rajoutées
+	jQuery(contentToCleanup).find("[data-vec-tmp='ul-tmp']").each(function()
+	{
+		// On fait en sorte que les 'li' soient éditables
+		jQuery(this).find("li").each(function()
+		{
+			jQuery(this).attr("data-vec", "txt");
+		});
+		
+		jQuery(this).removeAttr("data-vec-tmp"); // On enlève l'attribut temporaire
+	});
+	
+	// Nettoyage des 'p' rajoutés lors de l'ajout des 'ul'
+	jQuery(contentToCleanup).find("[data-vec-tmp='txt-ul-split']").each(function()
+	{
+		jQuery(this).removeAttr("data-vec-tmp").attr("data-vec", "txt"); // On enlève l'attribut temporaire et on fait en sorte que 'p' soit éditable
+	});
+	
+	// On enlève les noeuds vides
+	jQuery(contentToCleanup).find("[data-vec~='txt']:empty").remove();
+	// On supprimer les élément qui n'ont qu'un 'br' à l'intérieur
+	jQuery(contentToCleanup).find("[data-vec~='txt']").each(function()
+	{
+		if (jQuery(this).html() == "<br>" || jQuery(this).html() == "<br />")
+			jQuery(this).remove();
+	});
+	jQuery(contentToCleanup).find("ul:empty").remove();
+	
+	return contentToCleanup;
 }
 
 

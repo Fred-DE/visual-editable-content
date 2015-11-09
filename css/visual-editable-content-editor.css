@@ -15,7 +15,7 @@ html #wpadminbar {display: none !important;}
 #visual-editable-content-overlay {position: fixed; width: 100%; height: 100%; top: 0px; left: 0px; background-color: #000000; opacity: 0.3; zoom: 1; filter: alpha(opacity=30); z-index: 6000; display: none;}
 .visual-editable-content-popin {background-color: #FFFFFF; border-radius: 10px; box-shadow: 0px 0px 4px 4px #656565; padding: 20px; position: absolute; left: 50%; -webkit-transform: translateX(-50%); transform: translateX(-50%); width: 90%; z-index: 6001; display: none;}
 .visual-editable-content-popin p.visual-editable-content-popin-title {font-family: Arial, Verdana, Helvetica, sans-serif; font-size: 16px; font-weight: bold; text-align: center; color: #000000;}
-.visual-editable-content-popin textarea, .visual-editable-content-popin .editor {display: block; width: 80%; height: 400px; overflow: auto; margin: 0 auto; border: 2px solid #000000; resize: none;}
+.visual-editable-content-popin textarea, .visual-editable-content-popin .editor {display: block; width: 80%; height: 400px; overflow: auto; margin: 0 auto; padding: 5px; border: 2px solid #000000; resize: none;}
 .visual-editable-content-popin .visual-editable-content-buttons {margin-top: 30px; text-align: right;}
 .visual-editable-content-popin .visual-editable-content-buttons .visual-editable-content-button {margin-right: 20px;}
 .visual-editable-content-popin .visual-editable-content-buttons .visual-editable-content-button:last-child {margin-right: 0px;}
@@ -39,4 +39,5 @@ html #wpadminbar {display: none !important;}
 .visual-editable-content-txt-button span {display: inline-block; vertical-align: middle; line-height: normal;}
 .visual-editable-content-txt-button.visual-editable-content-txt-button-link span {font-size: 12px;}
 .visual-editable-content-txt-button.visual-editable-content-txt-button-unlink span {font-size: 12px; text-decoration: line-through;}
+.visual-editable-content-txt-button.visual-editable-content-txt-button-list span {background: transparent url(../images/editor_buttons/list.png) no-repeat center center; width: 20px; height: 20px; vertical-align: -1px;}
 

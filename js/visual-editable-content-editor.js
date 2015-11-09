@@ -12,6 +12,9 @@ var setVecLink;
 	var newLinkTarget = "";
 	
 	
+	// var mutationObserver;
+	
+	
 	$(document).ready(function()
 	{
 		initVisualEditableContentEditor();
@@ -27,7 +30,6 @@ var setVecLink;
 			type: "POST",
 			success: function(data)
 			{
-				//console.log(data);
 				$("body").append(data);
 				startVisualEditableContentEditor(); // Tout est chargé
 			},
@@ -39,6 +41,24 @@ var setVecLink;
 		});
 		
 		checkExecCommand();
+		
+		// Observateur de mutations
+		/*mutationObserver = new MutationObserver(function(mutations)
+		{
+			mutations.forEach(function(mutation)
+			{
+				console.log(mutation.type);
+			});
+		});
+		
+		var config =
+		{
+			attributes: true,
+			childList: true,
+			characterData: true
+			};
+		
+		observer.observe(target, config);*/
 	}
 	
 	// On regarde ce que crée les 'execCommand' sur le navigateur courant et on stocke les résultats dans un tableau
@@ -141,6 +161,12 @@ var setVecLink;
 			document.execCommand("unlink", false, false);
 		});
 		
+		// On clique sur le bouton de création d'une liste
+		$("#visual-editable-content-txt-menu").on("mousedown", ".visual-editable-content-txt-button-list", function()
+		{
+			document.execCommand("insertUnorderedList");
+		});
+		
 		// On clique sur une image éditable
 		$("[data-vec='content']").on("click", "[data-vec~='pic']", function(event)
 		{
@@ -185,6 +211,10 @@ var setVecLink;
 							{
 								if (newLinkTarget != "")
 									$(mutation.addedNodes[0]).attr("target", newLinkTarget);
+							}
+							else if (mutation.addedNodes[0].tagName.toLowerCase() == "ul") // Si c'est une balise 'ul'
+							{
+								// console.log("list");
 							}
 						}
 					}
@@ -308,7 +338,6 @@ var setVecLink;
 		// On valide le changement d'un texte
 		$("#visual-editable-content-txt-editor").one("click", "#visual-editable-content-txt-validate", function()
 		{
-			//$(element).html($("#visual-editable-content-txt-editor textarea").val());
 			$(element).html($("#visual-editable-content-txt-editor .editor").html());
 			closePopinVisualEditableContent(); // On ferme la popin
 			
@@ -318,24 +347,78 @@ var setVecLink;
 				$(element).find(tagsAssociation[i][1]).filter(function()
 				{
 					return (this.attributes.length === 0); // On le fait seulement si la balise de style ne contient aucun attribut
+					
 				}).replaceWith(function()
 				{
 					return '<span class="'+ tagsAssociation[i][0] +'">'+ $(this).html() +'</span>';
 				});
 			}
 			
-			// On enlève les balises a vide ou sans href
+			// On enlève les balises 'a' vide ou sans href
 			$(element).find("a:not([href])").contents().unwrap();
 			$(element).find("a:empty").remove();
+			
+			// Gestion de l'ajout de 'ul'
+			if ($(element).find("ul").length > 0 && $(element).get(0).tagName.toLowerCase() == "p")
+			{
+				// On stocke dans un tableau toutes les listes nouvellement créées
+				var listArray = new Array();
+				$(element).find("ul").each(function()
+				{
+					listArray.push(this);
+					$(this).replaceWith(function()
+					{
+						return '<div class="vec-list-tmp"></div>'; // On remplace les listes par une 'div' temporaire
+					});
+				});
+				
+				var vecTxtContainer = '<p';
+				$.each(element.attributes, function()
+				{
+					// this.attributes is not a plain object, but an array
+					// of attribute nodes, which contain both the name and value
+					if (this.specified)
+					{
+						if (this.name != "data-vec-attr-remove")
+						{
+							vecTxtContainer += ' '+ this.name +'="'+ this.value +'"';
+						}
+					}
+				});
+
+				
+				// On stocke le html dans une chaîne de caractères que l'on entoure
+				vecTxtContainer += ' data-vec-tmp="txt-ul">'+ $(element).html() +'</p>';
+				
+				// On remplace les 'div' temporaires par les listes que l'on avait stockées et on ferme et on ouvre des 'p' autour pour spliter la balise 'p' vec-txt container
+				var indexStart = 0;
+				var index = 0;
+				while (indexStart != -1)
+				{
+					indexStart = vecTxtContainer.indexOf('<div class="vec-list-tmp"></div>', indexStart);
+					if (indexStart != -1)
+					{
+						vecTxtContainer = vecTxtContainer.replace('<div class="vec-list-tmp"></div>', '</p><ul data-vec-tmp="ul-tmp">'+ $(listArray[index]).html() +'</ul><p data-vec-tmp="txt-ul-split">');
+					}
+					
+					index++;
+				}
+				
+				var newElement = jQuery.parseHTML(vecTxtContainer); // On transforme la chaîne de caractères en objet HTML
+				
+				$(element).after(newElement);
+				$(element).remove();
+			}
 		});
 		
-		$("#visual-editable-content-txt-editor .editor").on("paste", function(event)
+		// $("#visual-editable-content-txt-editor .editor").off("paste");
+		$("#visual-editable-content-txt-editor .editor").one("paste", function(event)
 		{
 			event.preventDefault();
 			
 			var textPaste = (event.originalEvent.clipboardData || window.clipboardData).getData("text");
 			
-			document.execCommand('insertText', false, textPaste);
+			document.execCommand("insertText", false, textPaste);
 		});
 	}
 	

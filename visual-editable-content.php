@@ -3,7 +3,7 @@
 		Plugin name: Visual Editable Content
 		Description: Permet d'éditer visuellement les éléments d'une page Wordpress.
 		Author: Frédéric Le Crom
-		Version: 1.0
+		Version: 1.1
 	*/
 	
 	/*class Visual_Editable_Content_Plugin()
