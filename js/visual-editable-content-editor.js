@@ -282,7 +282,7 @@ var setVecLink;
 	{
 		$("[data-vec='content'] [data-vec~='txt'], [data-vec='content'] [data-vec~='txt'] *, [data-vec='content'] [data-vec~='pic'], [data-vec='content'] [data-vec~='pic'] *").on("DOMAttrModified", function(event)
 		{
-			if (!(event.originalEvent.attrName == "src" && $(this).attr("data-vec").indexOf("pic") != -1)) // Si ce n'est pas la source d'une image que l'on modifie
+			if (!((event.originalEvent.attrName == "src" || event.originalEvent.attrName == "alt") && $(this).attr("data-vec").indexOf("pic") != -1)) // Si ce n'est pas la source d'une image que l'on modifie
 			{
 				if ($(event.currentTarget).attr(event.originalEvent.attrName) !== undefined)
 				{
@@ -323,7 +323,6 @@ var setVecLink;
 		$("#visual-editable-content-overlay, #visual-editable-content-txt-editor").css({"display": "block"});
 		$("#visual-editable-content-txt-editor").css({"top": visualEditableContentPopinTop +"px"});
 		
-		//$("#visual-editable-content-txt-editor textarea").val($(element).html());
 		$("#visual-editable-content-txt-editor .editor").html($(element).html());
 		
 		// On remplace les span par les balises de styles du navigateur
@@ -354,7 +353,7 @@ var setVecLink;
 				});
 			}
 			
-			// On enlève les balises 'a' vide ou sans href
+			// On enlève les balises 'a' vides ou sans href
 			$(element).find("a:not([href])").contents().unwrap();
 			$(element).find("a:empty").remove();
 			
@@ -430,6 +429,7 @@ var setVecLink;
 		$("#visual-editable-content-pic-editor").css({"top": visualEditableContentPopinTop +"px"});
 		
 		$("#visual-editable-content-pic-editor input[name='visual-editable-content-pic-editor-src']").val($(element).attr("src"));
+		$("#visual-editable-content-pic-editor input[name='visual-editable-content-pic-editor-alt']").val($(element).attr("alt"));
 		
 		
 		// On veut sélectionner une image de la librairie
@@ -464,6 +464,7 @@ var setVecLink;
 		$("#visual-editable-content-pic-editor").one("click", "#visual-editable-content-pic-validate", function()
 		{
 			$(element).attr("src", $("#visual-editable-content-pic-editor input[name='visual-editable-content-pic-editor-src']").val());
+			$(element).attr("alt", $("#visual-editable-content-pic-editor input[name='visual-editable-content-pic-editor-alt']").val());
 			closePopinVisualEditableContent(); // On ferme la popin
 		});
 	}

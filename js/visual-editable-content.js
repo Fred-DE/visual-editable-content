@@ -60,9 +60,9 @@ function saveVisualEditableContent(data)
 	var dataHtml = jQuery.parseHTML(data); // On transforme la chaîne de caractères en objet HTML
 	
 	// On veut seulement remplacer ce qu'il y a dans la balise avec l'attribut vec="content"
-	var mainTextareaContent = jQuery("textarea#content").val(); // On récupère tout le contenu du textarea Wordpress
+	var mainTextareaContent = jQuery("textarea#content").val(); // On récupère tout le contenu du textarea WordPress
 	
-	mainTextareaContent = '<div id="visual-editable-content-container">'+ mainTextareaContent +'</div>'; // On entoure ce contenu d'une div (string)
+	mainTextareaContent = '<div id="visual-editable-content-container">'+ mainTextareaContent +'</div>'; // On entoure ce contenu d'une 'div' (string)
 	
 	
 	
@@ -143,7 +143,7 @@ function saveVisualEditableContent(data)
 		indexVecTxt += 1; // On ajoute 1 à l'index, pour avoir l'index du data-vec="txt" à modifier
 		
 		var dataVecToReplace = jQuery(mainTextareaContent).find("#visual-editable-content-container-vec-content [data-vec~='txt']:eq("+ indexVecTxt +")"); // Noeud côté résultat
-		dataVecToReplace.html(jQuery(this).html()); // On insère le contenu du 1er 'p' (dont celui avant le 1er 'ul') dans le data-vec='txt
+		dataVecToReplace.html(jQuery(this).html()); // On insère le contenu du 1er 'p' (dont celui avant le 1er 'ul') dans le data-vec="txt"
 		
 		
 		var elementToAdd; // Noeud côté éditable
@@ -209,7 +209,7 @@ function saveVisualEditableContent(data)
 		jQuery(dataHtml).find("[data-vec~='pic']:eq("+ index +")").unwrap();
 	});
 	
-	jQuery(mainTextareaContent).find("[data-vec='content']").unwrap(); // On enlève la div que l'on a ajouté autour du vec="content"
+	jQuery(mainTextareaContent).find("[data-vec='content']").unwrap(); // On enlève la 'div' que l'on a ajoutée autour du vec="content"
 	
 	
 	
@@ -273,7 +273,7 @@ function saveVisualEditableContent(data)
 	mainTextareaContent = cleanupContent(mainTextareaContent);
 	
 	
-	jQuery("textarea#content").val(jQuery(mainTextareaContent).html()); // On insère le contenu dans le textarea Wordpress
+	jQuery("textarea#content").val(jQuery(mainTextareaContent).html()); // On insère le contenu dans le textarea WordPress
 }
 
 
@@ -355,7 +355,7 @@ function openLinksPopin()
 
 function cleanupContent(contentToCleanup)
 {
-	// Nettoyages des 'ul' rajoutées
+	// Nettoyage des 'ul' rajoutés
 	jQuery(contentToCleanup).find("[data-vec-tmp='ul-tmp']").each(function()
 	{
 		// On fait en sorte que les 'li' soient éditables
@@ -375,7 +375,7 @@ function cleanupContent(contentToCleanup)
 	
 	// On enlève les noeuds vides
 	jQuery(contentToCleanup).find("[data-vec~='txt']:empty").remove();
-	// On supprimer les élément qui n'ont qu'un 'br' à l'intérieur
+	// On supprime les élément qui n'ont qu'un 'br' à l'intérieur
 	jQuery(contentToCleanup).find("[data-vec~='txt']").each(function()
 	{
 		if (jQuery(this).html() == "<br>" || jQuery(this).html() == "<br />")
