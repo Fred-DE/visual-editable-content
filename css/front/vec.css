@@ -94,8 +94,8 @@ div[data-vec='carousel-container'] div[data-vec-carousel-screen] {position: abso
 div[data-vec='carousel-container'] div[data-vec-carousel-screen]:first-child {left: 0px;}
 
 .vec-carousel-slide-button {display: inline-block; vertical-align: middle; width: 33px; height: 81px; cursor: pointer;}
-.vec-carousel-slide-button[data-vec='carousel-left-button'] {background: transparent url(../images/buttons/carousel_arrow_left.png) no-repeat center top; margin-right: 50px;}
-.vec-carousel-slide-button[data-vec='carousel-right-button'] {background: transparent url(../images/buttons/carousel_arrow_right.png) no-repeat center top; margin-left: 50px;}
+.vec-carousel-slide-button[data-vec='carousel-left-button'] {background: transparent url(../../images/buttons/carousel_arrow_left.png) no-repeat center top; margin-right: 50px;}
+.vec-carousel-slide-button[data-vec='carousel-right-button'] {background: transparent url(../../images/buttons/carousel_arrow_right.png) no-repeat center top; margin-left: 50px;}
 .vec-carousel-slide-button:hover {background-position: center bottom;}
 
 div[data-vec='carousel-container'] div[data-vec-item-blank] {visibility: hidden;}

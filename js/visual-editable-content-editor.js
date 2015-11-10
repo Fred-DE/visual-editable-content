@@ -167,6 +167,7 @@ var setVecLink;
 			document.execCommand("insertUnorderedList");
 		});
 		
+		
 		// On clique sur une image éditable
 		$("[data-vec='content']").on("click", "[data-vec~='pic']", function(event)
 		{
@@ -174,6 +175,16 @@ var setVecLink;
 			
 			openVisualEditableContentPicEditor(this); // On ouvre la popin d'édition d'une image
 		});
+		
+		
+		// On clique sur un carousel
+		$("[data-vec='content']").on("click", "[data-vec~='carousel-container']", function(event)
+		{
+			event.stopPropagation();
+			
+			openVisualEditableContentCarouselEditor(this); // On ouvre la popin d'édition d'un carousel
+		});
+		
 		
 		// On clique sur l'overlay ou sur un bouton annuler
 		$("body").on("click", "#visual-editable-content-overlay, .visual-editable-content-button-cancel", function()
@@ -445,7 +456,7 @@ var setVecLink;
 				},
 				library:
 				{
-					type : 'image'
+					type: 'image'
 				},
 				multiple: false  // Set to true to allow multiple files to be selected
 			});
@@ -465,6 +476,45 @@ var setVecLink;
 		{
 			$(element).attr("src", $("#visual-editable-content-pic-editor input[name='visual-editable-content-pic-editor-src']").val());
 			$(element).attr("alt", $("#visual-editable-content-pic-editor input[name='visual-editable-content-pic-editor-alt']").val());
+			closePopinVisualEditableContent(); // On ferme la popin
+		});
+	}
+	
+	
+	// Fonction permettant de gérer la popin d'édition d'un carousel
+	function openVisualEditableContentCarouselEditor(element)
+	{
+		var visualEditableContentPopinTop = $(element).offset().top;
+		$("#visual-editable-content-overlay, #visual-editable-content-carousel-editor").css({"display": "block"});
+		$("#visual-editable-content-carousel-editor").css({"top": visualEditableContentPopinTop +"px"});
+		
+		$("#visual-editable-content-carousel-editor div.visual-editable-content-carousel-element-container").empty();
+		$(element).find("[data-vec='carousel-item']").each(function(index)
+		{
+			// var currentCarouselItem = $(this);
+			// currentCarouselItem.wrap('<div class="vec-carousel-item"></div>');
+			// $("#visual-editable-content-carousel-editor div.visual-editable-content-carousel-element-container").append($(currentCarouselItem).parent().html());
+			
+			$("#visual-editable-content-carousel-editor div.visual-editable-content-carousel-element-container").append
+			(
+				'<div class="line">'+
+					'<span class="num">'+ (index+1) +' - </span>'+
+					// <div class="editor-carousel" contenteditable="true">'+ $(this).html() +'</div>'+
+					'<textarea class="editor-carousel" name="visual-editable-content-carousel-editor-textarea">'+ $(this).html() +'</textarea>'+
+				'</div>'
+			);
+		});
+		
+		// On valide le changement d'un carousel
+		$("#visual-editable-content-carousel-editor").one("click", "#visual-editable-content-carousel-validate", function()
+		{
+			//$("#visual-editable-content-carousel-editor div.visual-editable-content-carousel-element-container")
+			
+			$(element).find("[data-vec='carousel-item']").each(function(index)
+			{
+				$(this).html($("#visual-editable-content-carousel-editor div.visual-editable-content-carousel-element-container .line:eq("+ (index) +") .editor-carousel").val());
+			});
+			
 			closePopinVisualEditableContent(); // On ferme la popin
 		});
 	}

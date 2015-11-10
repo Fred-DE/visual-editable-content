@@ -209,6 +209,24 @@ function saveVisualEditableContent(data)
 		jQuery(dataHtml).find("[data-vec~='pic']:eq("+ index +")").unwrap();
 	});
 	
+	// On remplace les éléments des carousels
+	jQuery(mainTextareaContent).find("#visual-editable-content-container-vec-content [data-vec~='carousel-container']").each(function(index)
+	{
+		var carouselContent = "\n";
+		
+		// On parcourt tous les éléments du carousel
+		jQuery(dataHtml).find("[data-vec~='carousel-container']:eq("+ index +") [data-vec='carousel-item']").each(function()
+		{
+			var nodeWithGoodAttr = getHtmlWithGoodAttr(this);
+			
+			jQuery(nodeWithGoodAttr).wrap('<div></div>');
+			
+			carouselContent += jQuery(nodeWithGoodAttr).parent().html() +"\n";
+		});
+		
+		jQuery(this).html(carouselContent);
+	});
+	
 	jQuery(mainTextareaContent).find("[data-vec='content']").unwrap(); // On enlève la 'div' que l'on a ajoutée autour du vec="content"
 	
 	
@@ -353,6 +371,7 @@ function openLinksPopin()
 }
 
 
+// Fonction permettant de 'nettoyer' certains éléments du contenu final.
 function cleanupContent(contentToCleanup)
 {
 	// Nettoyage des 'ul' rajoutés
@@ -382,6 +401,13 @@ function cleanupContent(contentToCleanup)
 			jQuery(this).remove();
 	});
 	jQuery(contentToCleanup).find("ul:empty").remove();
+	
+	// On enlève les span vides
+	jQuery(contentToCleanup).find("[data-vec~='txt'] span").each(function()
+	{
+		if (jQuery(this).html() == "<br>" || jQuery(this).html() == "<br />" || jQuery.trim(jQuery(this).html()) == "")
+			jQuery(this).remove();
+	});
 	
 	return contentToCleanup;
 }
