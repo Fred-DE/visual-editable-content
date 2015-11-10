@@ -72,7 +72,8 @@
 		wp_register_script("vec_transitions", plugin_dir_url( __FILE__ ) .'js/front/vec_transitions.js', "jquery", "1.0");
 		wp_enqueue_script("vec_transitions");
 		
-		wp_enqueue_style("visual_editable_content_front_css", plugin_dir_url( __FILE__ ) ."css/visual-editable-content-front.css", array(), false, "screen");
+		// wp_enqueue_style("visual_editable_content_front_css", plugin_dir_url( __FILE__ ) ."css/visual-editable-content-front.css", array(), false, "screen");
+		wp_enqueue_style("vec_css", plugin_dir_url( __FILE__ ) ."css/front/vec.css", array(), false, "screen");
 	}
 	add_action("wp_enqueue_scripts", "visualeditablecontent_scripts");
 	
