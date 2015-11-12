@@ -42,6 +42,14 @@ var setVecLink;
 		
 		checkExecCommand();
 		
+		$("div.visual-editable-content-popin").on("click", function(event)
+		{
+			console.log("click");
+		}).children().on("click", function(event)
+		{
+			return false;
+		});
+		
 		// Observateur de mutations
 		/*mutationObserver = new MutationObserver(function(mutations)
 		{
