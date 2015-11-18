@@ -31,6 +31,8 @@
 		
 		self.setVecCarousel();
 		
+		self.loadPictures();
+		
 		// Clic sur une flèche
 		$(self.vecCarousel).off("click", ".vec-carousel-slide-button");
 		$(self.vecCarousel).on("click", ".vec-carousel-slide-button", function()
@@ -100,6 +102,33 @@
 			}, self.timerDuration);
 		}
 	};
+	
+	// Permet d'attendre que les images du carousel soient chargée avant de l'afficher
+	VecCarousel.prototype.loadPictures = function()
+	{
+		var self = this;
+		
+		// $(self.vecCarousel).css({"visibility": "hidden"});
+		
+		var imagesCarousel = $(self.vecCarousel +" img");
+		var loadedImagesCount = 0;
+
+		imagesCarousel.load(function()
+		{
+			loadedImagesCount++;
+
+			if (loadedImagesCount == imagesCarousel.length)
+				$(self.vecCarousel).css({"visibility": "visible"});
+			
+		}).each(function()
+		{
+			loadedImagesCount++;
+
+			if (loadedImagesCount == imagesCarousel.length)
+				$(self.vecCarousel).css({"visibility": "visible"});
+			
+		});;
+	}
 	
 	
 	// Méthode permettant d'initialiser le carousel
