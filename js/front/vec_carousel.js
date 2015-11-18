@@ -86,20 +86,9 @@
 		// Si on veut faire slider le carousel avec un timer
 		if (self.timerDuration != 0)
 		{
-			setInterval(function()
-			{
-				var newIndex;
-				newIndex = self.currentIndex + 1;
-				
-				var loop = false;
-				if (newIndex > $(self.vecCarousel).find("[data-vec-carousel-screen]").length - 1)
-				{
-					newIndex = 0;
-					loop = true;
-				}
-				
-				self.vecCarouselSlide(newIndex, loop);
-			}, self.timerDuration);
+			this.timerInterval;
+			
+			self.timerManager();
 		}
 	};
 	
@@ -127,7 +116,7 @@
 			if (loadedImagesCount == imagesCarousel.length)
 				$(self.vecCarousel).css({"visibility": "visible"});
 			
-		});;
+		});
 	}
 	
 	
@@ -310,9 +299,39 @@
 			{
 				self.isAnimatingVecCarouselSlide = false;
 				self.currentIndex = index;
+				
+				if (self.timerDuration != 0) // Si on a un timer, on le reset
+				{
+					clearInterval(self.timerInterval);
+					self.timerManager();
+				}
 			}});
 			
 			$(self.vecCarousel).find("[data-vec-carousel-screen='"+ self.currentIndex +"']").animate({"left": -(100 * direction) +"%"}, {duration: durationVecCarouselSlide, easing: "linear"});
 		}
+	};
+	
+	
+	VecCarousel.prototype.timerManager = function()
+	{
+		var self = this;
+		
+		self.timerInterval = setInterval(function()
+		{
+			if (!$(self.vecCarousel +":hover").length > 0) // Si le curseur est sur le carousel, on ne lance pas le slide
+			{
+				var newIndex;
+				newIndex = self.currentIndex + 1;
+				
+				var loop = false;
+				if (newIndex > $(self.vecCarousel).find("[data-vec-carousel-screen]").length - 1)
+				{
+					newIndex = 0;
+					loop = true;
+				}
+				
+				self.vecCarouselSlide(newIndex, loop);
+			}
+		}, self.timerDuration);
 	};
 })(jQuery);
