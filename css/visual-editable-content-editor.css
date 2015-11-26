@@ -45,10 +45,11 @@ html #wpadminbar {display: none !important;}
 /* BAR MENU BOUTONS */
 #visual-editable-content-txt-menu {margin-bottom: 5px;}
 .visual-editable-content-txt-button {box-sizing: content-box; border: 1px solid #999999; border-radius: 5px; display: inline-block; width: 25px; height: 25px; line-height: 24px; margin-right: 3px; text-align: center; cursor: pointer;}
+.visual-editable-content-txt-button.remove {display: none;}
 .visual-editable-content-txt-button:last-child {margin-right: inherit;}
 .visual-editable-content-txt-button:hover {border-color: #000000;}
 .visual-editable-content-txt-button:active {box-shadow: 0 0 4px 2px #CCCCCC inset;}
-.visual-editable-content-txt-button span {display: inline-block; vertical-align: middle; line-height: normal;}
+.visual-editable-content-txt-button span {display: inline-block; vertical-align: middle; line-height: normal; cursor: pointer;}
 .visual-editable-content-txt-button.visual-editable-content-txt-button-link span {font-size: 12px;}
 .visual-editable-content-txt-button.visual-editable-content-txt-button-unlink span {font-size: 12px; text-decoration: line-through;}
 .visual-editable-content-txt-button.visual-editable-content-txt-button-list span {background: transparent url(../images/editor_buttons/list.png) no-repeat center center; width: 20px; height: 20px; vertical-align: -1px;}

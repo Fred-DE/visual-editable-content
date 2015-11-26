@@ -371,6 +371,14 @@ var setVecLink;
 	// Fonction permettant de gérer la popin d'édition d'un texte
 	function openVisualEditableContentTxtEditor(element)
 	{
+		$("#visual-editable-content-txt-editor div.visual-editable-content-txt-button").removeClass("remove");
+		// Si on édite un 'li'
+		if ($(element).get(0).tagName.toLowerCase() == "li")
+		{
+			// On ne veut pas laisser la possibilité d'ajouter un 'ul' à l'intérieur
+			$("#visual-editable-content-txt-editor div.visual-editable-content-txt-button-list").addClass("remove");
+		}
+		
 		var visualEditableContentPopinTop = $(element).offset().top;
 		
 		$("#visual-editable-content-overlay, #visual-editable-content-txt-editor").addClass("open");
@@ -420,11 +428,11 @@ var setVecLink;
 			$(element).find("a:empty").remove();
 			
 			// Gestion de l'ajout de 'ul'
-			if ($(element).find("ul").length > 0 && $(element).get(0).tagName.toLowerCase() == "p")
+			if ($(element).find("> ul").length > 0 && $(element).get(0).tagName.toLowerCase() == "p")
 			{
 				// On stocke dans un tableau toutes les listes nouvellement créées
 				var listArray = new Array();
-				$(element).find("ul").each(function()
+				$(element).find("> ul").each(function()
 				{
 					listArray.push(this);
 					$(this).replaceWith(function()
@@ -459,7 +467,7 @@ var setVecLink;
 					indexStart = vecTxtContainer.indexOf('<div class="vec-list-tmp"></div>', indexStart);
 					if (indexStart != -1)
 					{
-						vecTxtContainer = vecTxtContainer.replace('<div class="vec-list-tmp"></div>', '</p><ul data-vec-tmp="ul-tmp">'+ $(listArray[index]).html() +'</ul><p data-vec-tmp="txt-ul-split">');
+						vecTxtContainer = vecTxtContainer.replace('<div class="vec-list-tmp"></div>', '</p><ul data-vec-tmp="ul-tmp">\n'+ $(listArray[index]).html() +'\n</ul><p data-vec-tmp="txt-ul-split">');
 					}
 					
 					index++;

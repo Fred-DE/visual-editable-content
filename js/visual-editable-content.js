@@ -158,7 +158,7 @@ function saveVisualEditableContent(data)
 			
 			jQuery(elementToAdd).wrap('<div></div>');
 			
-			currentPositionHtml.after(jQuery(elementToAdd).parent().html()); // On ajoute le 'ul' après
+			currentPositionHtml.after("\n"+ jQuery(elementToAdd).parent().html()); // On ajoute le 'ul' après
 			currentPositionHtml = currentPositionHtml.next(); // On se positionne sur le 'ul' (côté résultat)
 			
 			jQuery(elementToAdd).unwrap();
@@ -169,7 +169,7 @@ function saveVisualEditableContent(data)
 			{
 				// console.log("if");
 				jQuery(elementToAdd).wrap('<div></div>');
-				currentPositionHtml.after(jQuery(elementToAdd).parent().html()); // On rajoute après le 'ul' cette balise 'p'
+				currentPositionHtml.after("\n"+ jQuery(elementToAdd).parent().html()); // On rajoute après le 'ul' cette balise 'p'
 				
 				jQuery(elementToAdd).unwrap();
 				
@@ -380,7 +380,7 @@ function cleanupContent(contentToCleanup)
 		// On fait en sorte que les 'li' soient éditables
 		jQuery(this).find("li").each(function()
 		{
-			jQuery(this).attr("data-vec", "txt");
+			jQuery(this).attr("data-vec", "txt").after("\n");
 		});
 		
 		jQuery(this).removeAttr("data-vec-tmp"); // On enlève l'attribut temporaire
