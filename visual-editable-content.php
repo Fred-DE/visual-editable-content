@@ -2,9 +2,24 @@
 	/*
 		Plugin name: Visual Editable Content
 		Description: Permet d'éditer visuellement les éléments d'une page Wordpress.
-		Author: Frédéric Le Crom
-		Version: 1.1
+		Version: 1.0.1
+		Author: Digital Effervescence - Frédéric Le Crom
+		Author URI: http://digital-effervescence.com
+		License: GPL2
+		License URI: https://www.gnu.org/licenses/gpl-2.0.html
 	*/
+	
+	
+	// exit if accessed directly
+	if (!defined('ABSPATH'))
+		exit;
+	
+	require_once("BFIGitHubPluginUploader.php");
+	if (is_admin())
+	{
+		new BFIGitHubPluginUpdater(__FILE__, 'Fred-DE', "visual-editable-content");
+	}
+
 	
 	/*class Visual_Editable_Content_Plugin()
 	{
