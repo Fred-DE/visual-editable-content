@@ -13,6 +13,7 @@
 		{
 			add_filter("pre_set_site_transient_update_plugins", array($this, "setTransitent"));
 			add_filter("plugins_api", array($this, "setPluginInfo"), 10, 3);
+			add_filter("upgrader_pre_install", array($this, "preInstall"), 10, 3);
 			add_filter("upgrader_post_install", array($this, "postInstall"), 10, 3);
 	 
 			$this->pluginFile = $pluginFile;
@@ -150,15 +151,27 @@
 			
 			return $response;
 		}
+		
+		
+		
+		public function preInstall($true, $args)
+		{
+			// Get plugin information
+			$this->initPluginData();
+
+			// Check if the plugin was installed before...
+			$this->pluginActivated = is_plugin_active($this->slug);
+		}
+
 	 
 		// Perform additional actions to successfully install our plugin
 		public function postInstall($true, $hook_extra, $result)
 		{
 			// Get plugin information
-			$this->initPluginData();
+			// $this->initPluginData();
 			
 			// Remember if our plugin was previously activated
-			$wasActivated = is_plugin_active($this->slug);
+			// $wasActivated = is_plugin_active($this->slug);
 			
 			// Since we are hosted in GitHub, our plugin folder would have a dirname of
 			// reponame-tagname change it to our original one:
@@ -168,7 +181,8 @@
 			$result["destination"] = $pluginFolder;
 
 			// Re-activate plugin if needed
-			if ($wasActivated)
+			// if ($wasActivated)
+			if ($this->pluginActivated)
 			{
 				$activate = activate_plugin($this->slug);
 			}
