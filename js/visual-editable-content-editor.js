@@ -11,6 +11,9 @@ var setVecLink;
 	
 	var newLinkTarget = "";
 	
+	// Drag des popins
+	var oldPageYPopin;
+	
 	
 	// var mutationObserver;
 	
@@ -42,13 +45,7 @@ var setVecLink;
 		
 		checkExecCommand();
 		
-		$("div.visual-editable-content-popin").on("click", function(event)
-		{
-			console.log("click");
-		}).children().on("click", function(event)
-		{
-			return false;
-		});
+		dragPopinManager();
 		
 		// Observateur de mutations
 		/*mutationObserver = new MutationObserver(function(mutations)
@@ -94,6 +91,42 @@ var setVecLink;
 		tagsAssociation[2][1] = $("#vec-tmp > *").get(0).tagName.toLowerCase();
 		
 		$("#vec-tmp").remove();
+	}
+	
+	function dragPopinManager()
+	{
+		$("body").on("mousedown", "div.visual-editable-content-popin", function(event)
+		{
+			if (event.target.parentNode === event.delegateTarget) // On clique sur la popin mais pas sur un élément présent dans la popin
+			{
+				oldPageYPopin = event.pageY;
+				addEventMouseMoveDragPopin();
+			}
+		});
+	}
+	
+	function addEventMouseMoveDragPopin()
+	{
+		$("body").on("mousemove", function(event)
+		{
+			var diffY = oldPageYPopin - event.pageY;
+			
+			var currentTopPopin = $(this).find("div.visual-editable-content-popin.open").css("top").substring(0, $(this).find("div.visual-editable-content-popin.open").css("top").length-2)*1;
+			currentTopPopin -= diffY;
+			$(this).find("div.visual-editable-content-popin.open").css({"top": currentTopPopin +"px"});
+			
+			oldPageYPopin = event.pageY;
+		});
+		
+		$("body").on("mouseup", function(event)
+		{
+			removeEventMouseMoveDragPopin();
+		});
+	}
+	function removeEventMouseMoveDragPopin()
+	{
+		$("body").off("mousemove");
+		$("body").off("mouseup");
 	}
 	
 	
@@ -339,7 +372,8 @@ var setVecLink;
 	function openVisualEditableContentTxtEditor(element)
 	{
 		var visualEditableContentPopinTop = $(element).offset().top;
-		$("#visual-editable-content-overlay, #visual-editable-content-txt-editor").css({"display": "block"});
+		
+		$("#visual-editable-content-overlay, #visual-editable-content-txt-editor").addClass("open");
 		$("#visual-editable-content-txt-editor").css({"top": visualEditableContentPopinTop +"px"});
 		
 		$("#visual-editable-content-txt-editor .editor").html($(element).html());
@@ -352,6 +386,15 @@ var setVecLink;
 				return '<'+ tagsAssociation[i][1] +'>'+ $(this).html() +'</'+ tagsAssociation[i][1] +'>';
 			});
 		}
+		
+		/*$("div.visual-editable-content-popin").on("click", function(event)
+		{
+			console.log("click");
+		}).children().on("click", function(event)
+		{
+			console.log("children");
+			return false;
+		});*/
 		
 		// On valide le changement d'un texte
 		$("#visual-editable-content-txt-editor").one("click", "#visual-editable-content-txt-validate", function()
@@ -444,7 +487,8 @@ var setVecLink;
 	function openVisualEditableContentPicEditor(element)
 	{
 		var visualEditableContentPopinTop = $(element).offset().top;
-		$("#visual-editable-content-overlay, #visual-editable-content-pic-editor").css({"display": "block"});
+		
+		$("#visual-editable-content-overlay, #visual-editable-content-pic-editor").addClass("open");
 		$("#visual-editable-content-pic-editor").css({"top": visualEditableContentPopinTop +"px"});
 		
 		$("#visual-editable-content-pic-editor input[name='visual-editable-content-pic-editor-src']").val($(element).attr("src"));
@@ -493,7 +537,8 @@ var setVecLink;
 	function openVisualEditableContentCarouselEditor(element)
 	{
 		var visualEditableContentPopinTop = $(element).offset().top;
-		$("#visual-editable-content-overlay, #visual-editable-content-carousel-editor").css({"display": "block"});
+		
+		$("#visual-editable-content-overlay, #visual-editable-content-carousel-editor").addClass("open");
 		$("#visual-editable-content-carousel-editor").css({"top": visualEditableContentPopinTop +"px"});
 		
 		$("#visual-editable-content-carousel-editor div.visual-editable-content-carousel-element-container").empty();
@@ -516,8 +561,6 @@ var setVecLink;
 		// On valide le changement d'un carousel
 		$("#visual-editable-content-carousel-editor").one("click", "#visual-editable-content-carousel-validate", function()
 		{
-			//$("#visual-editable-content-carousel-editor div.visual-editable-content-carousel-element-container")
-			
 			$(element).find("[data-vec='carousel-item']").each(function(index)
 			{
 				$(this).html($("#visual-editable-content-carousel-editor div.visual-editable-content-carousel-element-container .line:eq("+ (index) +") .editor-carousel").val());
@@ -531,7 +574,7 @@ var setVecLink;
 	// Fonction permettant de fermer la popin affichée
 	function closePopinVisualEditableContent()
 	{
-		$("#visual-editable-content-overlay, .visual-editable-content-popin").css({"display": "none"});
+		$("#visual-editable-content-overlay, .visual-editable-content-popin").removeClass("open");
 	}
 	
 	
