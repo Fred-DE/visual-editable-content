@@ -54,22 +54,18 @@ var pluginDirUrl;
 	}
 })(jQuery);
 
-// Fonction appelée depuis l'iframe. Permet de récupérer le nouveau DOM
-/*function returnVisualEditableContent(param)
-{
-	alert(pluginDirUrl);
-	jQuery("#visual-editable-content-editor").css({"border": "1px solid red"});
-}*/
-
 // On récupère les modifications, on les traite et on valide (insert dans le textarea WordPress)
 function saveVisualEditableContent(data)
 {
 	var dataHtml = jQuery.parseHTML(data); // On transforme la chaîne de caractères en objet HTML
 	
 	// On veut seulement remplacer ce qu'il y a dans la balise avec l'attribut vec="content"
-	var mainTextareaContent = jQuery("textarea#content").val(); // On récupère tout le contenu du textarea Wordpress
+	var mainTextareaContent = jQuery("textarea#content").val(); // On récupère tout le contenu du textarea WordPress
 	
-	mainTextareaContent = '<div id="visual-editable-content-container">'+ mainTextareaContent +'</div>'; // On entoure ce contenu d'une div (string)
+	mainTextareaContent = '<div id="visual-editable-content-container">'+ mainTextareaContent +'</div>'; // On entoure ce contenu d'une 'div' (string)
+	
+	
+	
 	
 	
 	// On récupère les balises 'script' en string
@@ -87,7 +83,7 @@ function saveVisualEditableContent(data)
 			indexStart = indexScriptEnd;
 			
 			var scriptTagString = mainTextareaContent.substring(indexScriptStart, indexScriptEnd);
-			// scriptsArray.push(scriptTagString);
+			
 			scriptsArray[scriptsArray.length] = new Array();
 			scriptsArray[scriptsArray.length-1]["script"] = scriptTagString;
 			
@@ -123,12 +119,69 @@ function saveVisualEditableContent(data)
 		}
 	}
 	
-	// console.log(arrayIndexClass);
-	// console.log(minDiffBetweenClassAndScript);
+	
+	
 	
 	mainTextareaContent = jQuery.parseHTML(mainTextareaContent); // On transforme la chaîne de caractères en objet HTML
 	
 	jQuery(mainTextareaContent).find("[data-vec='content']").wrap('<div id="visual-editable-content-container-vec-content"></div>'); // On entoure la balise avec l'attribut vec="content" d'une div
+	
+	
+	// Gestion des ajouts des 'ul'
+	jQuery(dataHtml).find("[data-vec-tmp='txt-ul']").each(function(index)
+	{
+		// console.log("text-ul");
+		// var dataVecPrev = jQuery(this).prevAll("[data-vec='txt']").index();
+		// var dataVecPrev = jQuery(this).prevAll("[data-vec~='txt']").first(); // On récupère le data-vec="txt" le plus proche positionné avant le ul courant
+		var allDataVecTxt = jQuery(dataHtml).find("[data-vec~='txt']");
+		var dataVecPrev = allDataVecTxt.eq(allDataVecTxt.index(this) - 1); // On récupère le data-vec="txt" le plus proche positionné avant le ul courant
+		
+		// console.log(dataVecPrev);
+		// var indexVecTxt = jQuery(dataHtml).index(dataVecPrev);
+		var indexVecTxt = jQuery(dataHtml).find("[data-vec~='txt']").index(dataVecPrev); // On récupère l'index du data-vec="txt" récupéré juste avant
+		// console.log(indexVecTxt);
+		indexVecTxt += 1; // On ajoute 1 à l'index, pour avoir l'index du data-vec="txt" à modifier
+		
+		var dataVecToReplace = jQuery(mainTextareaContent).find("#visual-editable-content-container-vec-content [data-vec~='txt']:eq("+ indexVecTxt +")"); // Noeud côté résultat
+		dataVecToReplace.html(jQuery(this).html()); // On insère le contenu du 1er 'p' (dont celui avant le 1er 'ul') dans le data-vec="txt"
+		
+		
+		var elementToAdd; // Noeud côté éditable
+		elementToAdd = jQuery(this).next(); // On se positionne sur le 'ul'
+		var currentPositionHtml; // Noeud côté HTML résultat
+		currentPositionHtml = dataVecToReplace;
+		
+		// On rajoute les 'ul' et 'p' que l'on a dû rajouter
+		do
+		{
+			// console.log("do");
+			
+			jQuery(elementToAdd).wrap('<div></div>');
+			
+			currentPositionHtml.after("\n"+ jQuery(elementToAdd).parent().html()); // On ajoute le 'ul' après
+			currentPositionHtml = currentPositionHtml.next(); // On se positionne sur le 'ul' (côté résultat)
+			
+			jQuery(elementToAdd).unwrap();
+			elementToAdd = elementToAdd.next(); // On se positionne sur l'élément après le 'ul' (côté éditable)
+			
+			// Si après le 'ul' (côté éditable) on a dû rajouter une balise 'p'
+			if (jQuery(elementToAdd).attr("data-vec-tmp") == "txt-ul-split")
+			{
+				// console.log("if");
+				jQuery(elementToAdd).wrap('<div></div>');
+				currentPositionHtml.after("\n"+ jQuery(elementToAdd).parent().html()); // On rajoute après le 'ul' cette balise 'p'
+				
+				jQuery(elementToAdd).unwrap();
+				
+				elementToAdd = elementToAdd.next(); // On se positionne sur l'élément après le 'p' (côté éditable)
+				
+				currentPositionHtml = currentPositionHtml.next(); // On se positionne sur le 'p' que l'on vient d'ajouter (côté résultat)
+			}
+		} while(elementToAdd.length != 0 && jQuery(elementToAdd).get(0).tagName.toLowerCase() == "ul" && jQuery(elementToAdd).attr("data-vec-tmp") == "ul-tmp"); // Tant qu'il y a un 'ul' à ajouter
+	});
+	
+	// On enlève des noeuds vides
+	jQuery(mainTextareaContent).find("#visual-editable-content-container-vec-content [data-vec-tmp='txt-ul-split']:empty").remove();
 	
 	// On remplace les textes
 	jQuery(mainTextareaContent).find("#visual-editable-content-container-vec-content [data-vec~='txt']").each(function(index)
@@ -156,7 +209,29 @@ function saveVisualEditableContent(data)
 		jQuery(dataHtml).find("[data-vec~='pic']:eq("+ index +")").unwrap();
 	});
 	
-	jQuery(mainTextareaContent).find("[data-vec='content']").unwrap(); // On enlève la div que l'on a ajouté autour du vec="content"
+	// On remplace les éléments des carousels
+	jQuery(mainTextareaContent).find("#visual-editable-content-container-vec-content [data-vec~='carousel-container']").each(function(index)
+	{
+		var carouselContent = "\n";
+		
+		// On parcourt tous les éléments du carousel
+		jQuery(dataHtml).find("[data-vec~='carousel-container']:eq("+ index +") [data-vec='carousel-item']").each(function()
+		{
+			var nodeWithGoodAttr = getHtmlWithGoodAttr(this);
+			
+			jQuery(nodeWithGoodAttr).wrap('<div></div>');
+			
+			carouselContent += jQuery(nodeWithGoodAttr).parent().html() +"\n";
+		});
+		
+		jQuery(this).html(carouselContent);
+	});
+	
+	jQuery(mainTextareaContent).find("[data-vec='content']").unwrap(); // On enlève la 'div' que l'on a ajoutée autour du vec="content"
+	
+	
+	
+	
 	
 	// On rajoute les balises 'script' (au cas où il y en ait)
 	for (var i = 0; i < scriptsArray.length; i++)
@@ -209,28 +284,19 @@ function saveVisualEditableContent(data)
 			script.text = contentScript;
 		}
 		
-		// jQuery(mainTextareaContent).find("[data-vec='content']").append(script); // On ajoute les scripts à la fin de la page
 		jQuery(mainTextareaContent).find("."+ scriptsArray[i]["class"]).append(script); // On ajoute les scripts à la fin de la page
 	}
-	// console.log(jQuery(mainTextareaContent).html());
-	
-	// mainTextareaContent = jQuery("textarea#content").val();
-	// var tmpTxt = new Object();
-	// var truc = jQuery("textarea#content").html('<div id="test">'+ jQuery(mainTextareaContent).html() +'</div>').html();
-	// var truc = jQuery(mainTextareaContent).html();
-	// console.log(jQuery(mainTextareaContent).html());
 	
 	
-	jQuery("textarea#content").val(jQuery(mainTextareaContent).html()); // On insert le contenu dans le textarea Wordpress
+	mainTextareaContent = cleanupContent(mainTextareaContent);
+	
+	
+	jQuery("textarea#content").val(jQuery(mainTextareaContent).html()); // On insère le contenu dans le textarea WordPress
 }
+
 
 function getHtmlWithGoodAttr(vecNode)
 {
-	/*console.log(jQuery(vecNode).attr("data-vec-attr-remove"));
-	// console.log(jQuery(vecNode).attributes);
-	if (typeof(jQuery(vecNode).attr("data-vec-attr-remove")) != "undefined")
-		console.log(jQuery(vecNode).attr("data-vec-attr-remove"));*/
-	
 	jQuery(vecNode).find("[data-vec-attr-remove]").each(function()
 	{
 		var stringAttr = jQuery(this).attr("data-vec-attr-remove");
@@ -246,8 +312,6 @@ function getHtmlWithGoodAttr(vecNode)
 			else
 				jQuery(this).removeAttr(arrayAttr[i]);
 		}
-		
-		// jQuery(this).removeAttr("[data-vec-attr-remove]");
 	});
 	
 	jQuery(vecNode).find("*").removeAttr("data-vec-attr-remove");
@@ -271,7 +335,6 @@ function openLinksPopin()
 	
 	
 	wpLink.open("content");
-	// wpLink.open(jQuery("#visual-editable-content-editor").contents().find("#editor").attr("id"));
 	
 	jQuery("#wp-link-submit").off("click");
 	jQuery("#wpwrap").off("click", "#wp-link-submit");
@@ -282,17 +345,11 @@ function openLinksPopin()
 		event.stopImmediatePropagation();
 		
 		var linkAtts = wpLink.getAttrs(); // the links attributes (href, target) are stored in an object, which can be access via  wpLink.getAttrs()
-		// jQuery('your_url_textfield').val(linkAtts.href); // get the href attribute and add to a textfield, or use as you see fit
+		
 		wpLink.textarea = jQuery("#visual-editable-content-editor"); // to close the link dialogue, it is again expecting an wp_editor instance, so you need to give it something to set focus back to. In this case, I'm using body, but the textfield with the URL would be fine
 		wpLink.close(); //close the dialogue
 		
-		// console.log(linkAtts);
-		
-		// Trap any events
-		// event.preventDefault ? event.preventDefault() : event.returnValue = false;
-		
 		jQuery("#visual-editable-content-editor")[0].contentWindow.setVecLink(linkAtts.href, linkAtts.target);
-		// document.getElementById("visual-editable-content-editor").contentWindow.setVecLink();
 		
 		return false;
 	});
@@ -311,6 +368,48 @@ function openLinksPopin()
 		
 		return false;
 	});
+}
+
+
+// Fonction permettant de 'nettoyer' certains éléments du contenu final.
+function cleanupContent(contentToCleanup)
+{
+	// Nettoyage des 'ul' rajoutés
+	jQuery(contentToCleanup).find("[data-vec-tmp='ul-tmp']").each(function()
+	{
+		// On fait en sorte que les 'li' soient éditables
+		jQuery(this).find("li").each(function()
+		{
+			jQuery(this).attr("data-vec", "txt").after("\n");
+		});
+		
+		jQuery(this).removeAttr("data-vec-tmp"); // On enlève l'attribut temporaire
+	});
+	
+	// Nettoyage des 'p' rajoutés lors de l'ajout des 'ul'
+	jQuery(contentToCleanup).find("[data-vec-tmp='txt-ul-split']").each(function()
+	{
+		jQuery(this).removeAttr("data-vec-tmp").attr("data-vec", "txt"); // On enlève l'attribut temporaire et on fait en sorte que 'p' soit éditable
+	});
+	
+	// On enlève les noeuds vides
+	jQuery(contentToCleanup).find("[data-vec~='txt']:empty").remove();
+	// On supprime les élément qui n'ont qu'un 'br' à l'intérieur
+	jQuery(contentToCleanup).find("[data-vec~='txt']").each(function()
+	{
+		if (jQuery(this).html() == "<br>" || jQuery(this).html() == "<br />")
+			jQuery(this).remove();
+	});
+	jQuery(contentToCleanup).find("ul:empty").remove();
+	
+	// On enlève les span vides
+	jQuery(contentToCleanup).find("[data-vec~='txt'] span").each(function()
+	{
+		if (jQuery(this).html() == "<br>" || jQuery(this).html() == "<br />" || jQuery.trim(jQuery(this).html()) == "")
+			jQuery(this).remove();
+	});
+	
+	return contentToCleanup;
 }
 
 

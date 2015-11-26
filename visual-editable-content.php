@@ -2,9 +2,44 @@
 	/*
 		Plugin name: Visual Editable Content
 		Description: Permet d'éditer visuellement les éléments d'une page Wordpress.
-		Author: Frédéric Le Crom
-		Version: 1.0
+		Version: 1.1.0
+		Author: Digital Effervescence - Frédéric Le Crom
+		Author URI: http://digital-effervescence.com
+		License: GPL2
+		License URI: https://www.gnu.org/licenses/gpl-2.0.html
 	*/
+	
+	
+	// exit if accessed directly
+	if (!defined('ABSPATH'))
+		exit;
+	
+	/*require_once("BFIGitHubPluginUploader.php");
+	if (is_admin())
+	{
+		new BFIGitHubPluginUpdater(__FILE__, "Fred-DE", "visual-editable-content");
+	}*/
+	
+	/*require_once("updater.php");
+	if (is_admin())
+	{
+		$config = array
+		(
+			'slug' => plugin_basename(__FILE__), // this is the slug of your plugin 
+			'proper_folder_name' => 'visual-editable-content', // this is the name of the folder your plugin lives in 
+			'api_url' => 'https://api.github.com/repos/Fred-DE/visual-editable-content', // the github API url of your github repo 
+			'raw_url' => 'https://raw.github.com/Fred-DE/visual-editable-content/master', // the github raw url of your github repo 
+			'github_url' => 'https://github.com/Fred-DE/visual-editable-content', // the github url of your github repo 
+			'zip_url' => 'https://github.com/Fred-DE/visual-editable-content/zipball/master', // the zip url of the github repo 
+			'sslverify' => true, // wether WP should check the validity of the SSL cert when getting an update, see https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/2 and https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/4 for details 
+			'requires' => '3.0', // which version of WordPress does your plugin require? 
+			'tested' => '3.3', // which version of WordPress is your plugin tested up to? 
+			'readme' => 'README.MD' // which file to use as the readme for the version number 
+
+		);
+		new WPGitHubUpdater($config);
+	}*/
+
 	
 	/*class Visual_Editable_Content_Plugin()
 	{
@@ -66,10 +101,14 @@
 		// wp_register_script("wp_link_js", "/". WPINC .'/js/wplink.min.js', "jquery", "1.0");
 		// wp_enqueue_script("wp_link_js");
 		
-		/*wp_register_script("wp_dialogs", "/". WPINC .'/js/wpdialog.min.js', "jquery", "1.0");
-		wp_enqueue_script("wp_dialogs");*/
+		wp_register_script("vec_carousel", plugin_dir_url( __FILE__ ) .'js/front/vec_carousel.js', "jquery", "1.0");
+		wp_enqueue_script("vec_carousel");
 		
-		wp_enqueue_style("visual_editable_content_front_css", plugin_dir_url( __FILE__ ) ."css/visual-editable-content-front.css", array(), false, "screen");
+		wp_register_script("vec_transitions", plugin_dir_url( __FILE__ ) .'js/front/vec_transitions.js', "jquery", "1.0");
+		wp_enqueue_script("vec_transitions");
+		
+		// wp_enqueue_style("visual_editable_content_front_css", plugin_dir_url( __FILE__ ) ."css/visual-editable-content-front.css", array(), false, "screen");
+		wp_enqueue_style("vec_css", plugin_dir_url( __FILE__ ) ."css/front/vec.css", array(), false, "screen");
 	}
 	add_action("wp_enqueue_scripts", "visualeditablecontent_scripts");
 	

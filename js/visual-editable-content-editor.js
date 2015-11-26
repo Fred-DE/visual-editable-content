@@ -1,7 +1,3 @@
-/*var wpLinkL10n;
-var inputs;
-var h;*/
-
 var setVecLink;
 
 (function($)
@@ -15,7 +11,11 @@ var setVecLink;
 	
 	var newLinkTarget = "";
 	
-	//var selectionStart;
+	// Drag des popins
+	var oldPageYPopin;
+	
+	
+	// var mutationObserver;
 	
 	
 	$(document).ready(function()
@@ -27,19 +27,12 @@ var setVecLink;
 
 	function initVisualEditableContentEditor()
 	{
-		//$("body").append('<div id="visual-editable-content-overlay"></div>');
-		//$("body").append('<div id="visual-editable-content-txt-editor" class="visual-editable-content-popin"><p class="visual-editable-content-popin-title">Édition du texte</p> <textarea name="visual-editable-content-txt-editor-textarea"></textarea> <div class="visual-editable-content-buttons"><div id="visual-editable-content-txt-validate" class="visual-editable-content-button"><span>Valider</span></div><div id="visual-editable-content-txt-cancel" class="visual-editable-content-button visual-editable-content-button-cancel"><span>Annuler</span></div></div>');
-		
-		//console.log(visualEditableContentVariables.path);
-		//console.log(visualEditableContentPath);
-		
 		$.ajax(
 		{
 			url: visualEditableContentPath +"layout.html",
 			type: "POST",
 			success: function(data)
 			{
-				//console.log(data);
 				$("body").append(data);
 				startVisualEditableContentEditor(); // Tout est chargé
 			},
@@ -50,7 +43,32 @@ var setVecLink;
 			}
 		});
 		
-		// On regarde ce que crée les 'execCommand' sur le navigateur courant et on stocke les résultats dans un tableau
+		checkExecCommand();
+		
+		dragPopinManager();
+		
+		// Observateur de mutations
+		/*mutationObserver = new MutationObserver(function(mutations)
+		{
+			mutations.forEach(function(mutation)
+			{
+				console.log(mutation.type);
+			});
+		});
+		
+		var config =
+		{
+			attributes: true,
+			childList: true,
+			characterData: true
+			};
+		
+		observer.observe(target, config);*/
+	}
+	
+	// On regarde ce que crée les 'execCommand' sur le navigateur courant et on stocke les résultats dans un tableau
+	function checkExecCommand()
+	{
 		$("body").append('<div id="vec-tmp" contenteditable="true">testvec</div>');
 		selectText("vec-tmp");
 		document.execCommand("bold", false, null);
@@ -74,6 +92,43 @@ var setVecLink;
 		
 		$("#vec-tmp").remove();
 	}
+	
+	function dragPopinManager()
+	{
+		$("body").on("mousedown", "div.visual-editable-content-popin", function(event)
+		{
+			if (event.target.parentNode === event.delegateTarget) // On clique sur la popin mais pas sur un élément présent dans la popin
+			{
+				oldPageYPopin = event.pageY;
+				addEventMouseMoveDragPopin();
+			}
+		});
+	}
+	
+	function addEventMouseMoveDragPopin()
+	{
+		$("body").on("mousemove", function(event)
+		{
+			var diffY = oldPageYPopin - event.pageY;
+			
+			var currentTopPopin = $(this).find("div.visual-editable-content-popin.open").css("top").substring(0, $(this).find("div.visual-editable-content-popin.open").css("top").length-2)*1;
+			currentTopPopin -= diffY;
+			$(this).find("div.visual-editable-content-popin.open").css({"top": currentTopPopin +"px"});
+			
+			oldPageYPopin = event.pageY;
+		});
+		
+		$("body").on("mouseup", function(event)
+		{
+			removeEventMouseMoveDragPopin();
+		});
+	}
+	function removeEventMouseMoveDragPopin()
+	{
+		$("body").off("mousemove");
+		$("body").off("mouseup");
+	}
+	
 	
 	function selectText(element)
 	{
@@ -130,18 +185,11 @@ var setVecLink;
 			savedSelection = saveSelection();
 			
 			parent.openLinksPopin();
-			
-			// console.log(linkInfos);
-			
-			
-			
-			// document.execCommand("CreateLink", false, "http://stackoverflow.com/");
 		});
 		
 		setVecLink = function(href, target)
 		{
 			newLinkTarget = target;
-			// console.log(href);
 			
 			restoreSelection(savedSelection);
 			
@@ -154,21 +202,12 @@ var setVecLink;
 			document.execCommand("unlink", false, false);
 		});
 		
-		
-		
-		/*$("#wp-link-submit").on("click", function(event)
+		// On clique sur le bouton de création d'une liste
+		$("#visual-editable-content-txt-menu").on("mousedown", ".visual-editable-content-txt-button-list", function()
 		{
-			console.log("yo");
-			
-			// var linkAtts = window.parent.wpLink.getAttrs();
-			// var targetID = window.parent.wpLink.newattr.replace('add_link_button_', '');
-		});*/
+			document.execCommand("insertUnorderedList");
+		});
 		
-		/*$("#visual-editable-content-txt-editor").on("mouseup", "textarea", function()
-		{
-			console.log($(this));
-			console.log($(this)[0].selectionStart);
-		});*/
 		
 		// On clique sur une image éditable
 		$("[data-vec='content']").on("click", "[data-vec~='pic']", function(event)
@@ -177,6 +216,16 @@ var setVecLink;
 			
 			openVisualEditableContentPicEditor(this); // On ouvre la popin d'édition d'une image
 		});
+		
+		
+		// On clique sur un carousel
+		$("[data-vec='content']").on("click", "[data-vec~='carousel-container']", function(event)
+		{
+			event.stopPropagation();
+			
+			openVisualEditableContentCarouselEditor(this); // On ouvre la popin d'édition d'un carousel
+		});
+		
 		
 		// On clique sur l'overlay ou sur un bouton annuler
 		$("body").on("click", "#visual-editable-content-overlay, .visual-editable-content-button-cancel", function()
@@ -194,12 +243,6 @@ var setVecLink;
 			$("[data-vec='content']").unwrap();
 		});
 		
-		
-		// On veut fermer le module (pas utilisé finalement)
-		/*$("body").on("click", "#visual-editable-content-global-close", function()
-		{
-			parent.closeVisualEditableContent($("[data-vec='content']").html());
-		});*/
 		
 		addEventDomAttrModified(); // On enlève la possibilité d'ajouter des attributs style aux balises
 		
@@ -220,6 +263,10 @@ var setVecLink;
 							{
 								if (newLinkTarget != "")
 									$(mutation.addedNodes[0]).attr("target", newLinkTarget);
+							}
+							else if (mutation.addedNodes[0].tagName.toLowerCase() == "ul") // Si c'est une balise 'ul'
+							{
+								// console.log("list");
 							}
 						}
 					}
@@ -285,40 +332,9 @@ var setVecLink;
 	
 	function addEventDomAttrModified()
 	{
-		// On détecte le changement de DOM -> on veut empêcher l'ajout d'attributs style
-		/*$("[data-vec='content'] *").on("DOMAttrModified", function(event)
-		{
-			if (event.originalEvent.attrName == "style")
-			{
-				if ($(event.currentTarget).attr("style") !== undefined)
-				{
-					removeEventDomAttrModified(); // On désactive l'écouteur sur l'évènement le temps de faire notre manipulation
-					
-					//console.log(event);
-					
-					var currentStyle = event.originalEvent.prevValue;
-					//console.log(currentStyle);
-					$(event.currentTarget).removeAttr("style");
-					if (currentStyle != "")
-						$(event.currentTarget).attr("style", currentStyle);
-					
-					addEventDomAttrModified();
-				}
-			}
-		});*/
-		
-		// $("[data-vec='content'] *").on("DOMAttrModified", function(event)
 		$("[data-vec='content'] [data-vec~='txt'], [data-vec='content'] [data-vec~='txt'] *, [data-vec='content'] [data-vec~='pic'], [data-vec='content'] [data-vec~='pic'] *").on("DOMAttrModified", function(event)
 		{
-			/*if (event.originalEvent.attrName == "style")
-			{
-				if ($(event.currentTarget).attr("style") !== undefined)
-				{
-					$(this).attr("data-vec-attr-remove", "style");
-				}
-			}*/
-			
-			if (!(event.originalEvent.attrName == "src" && $(this).attr("data-vec").indexOf("pic") != -1)) // Si ce n'est pas la source d'une image que l'on modifie
+			if (!((event.originalEvent.attrName == "src" || event.originalEvent.attrName == "alt") && $(this).attr("data-vec").indexOf("pic") != -1)) // Si ce n'est pas la source d'une image que l'on modifie
 			{
 				if ($(event.currentTarget).attr(event.originalEvent.attrName) !== undefined)
 				{
@@ -337,29 +353,14 @@ var setVecLink;
 						
 						if (event.originalEvent.prevValue != "") // Si l'attribut existait déjà et avait une valeur
 						{
-							// console.log(event.originalEvent.attrName);
 							$(this).attr("data-vec-tmp-"+ event.originalEvent.attrName, event.originalEvent.prevValue);
 						}
 					}
-					
-					// console.log($(this).attr(event.originalEvent.attrName));
-					// console.log(event);
 					
 					addEventDomAttrModified();
 				}
 			}
 		});
-		
-		// $("body *").on("DOMAttrModified", function(event)
-		// {
-			// console.log("a");
-			// console.log(event.originalEvent);
-		// });
-		
-		// $("#visual-editable-content-txt-editor").on("DOMAttrModified", "#editor *", function(event)
-		// {
-			// console.log(event.originalEvent);
-		// });
 	}
 	
 	function removeEventDomAttrModified()
@@ -370,11 +371,19 @@ var setVecLink;
 	// Fonction permettant de gérer la popin d'édition d'un texte
 	function openVisualEditableContentTxtEditor(element)
 	{
+		$("#visual-editable-content-txt-editor div.visual-editable-content-txt-button").removeClass("remove");
+		// Si on édite un 'li'
+		if ($(element).get(0).tagName.toLowerCase() == "li")
+		{
+			// On ne veut pas laisser la possibilité d'ajouter un 'ul' à l'intérieur
+			$("#visual-editable-content-txt-editor div.visual-editable-content-txt-button-list").addClass("remove");
+		}
+		
 		var visualEditableContentPopinTop = $(element).offset().top;
-		$("#visual-editable-content-overlay, #visual-editable-content-txt-editor").css({"display": "block"});
+		
+		$("#visual-editable-content-overlay, #visual-editable-content-txt-editor").addClass("open");
 		$("#visual-editable-content-txt-editor").css({"top": visualEditableContentPopinTop +"px"});
 		
-		//$("#visual-editable-content-txt-editor textarea").val($(element).html());
 		$("#visual-editable-content-txt-editor .editor").html($(element).html());
 		
 		// On remplace les span par les balises de styles du navigateur
@@ -386,10 +395,18 @@ var setVecLink;
 			});
 		}
 		
+		/*$("div.visual-editable-content-popin").on("click", function(event)
+		{
+			console.log("click");
+		}).children().on("click", function(event)
+		{
+			console.log("children");
+			return false;
+		});*/
+		
 		// On valide le changement d'un texte
 		$("#visual-editable-content-txt-editor").one("click", "#visual-editable-content-txt-validate", function()
 		{
-			//$(element).html($("#visual-editable-content-txt-editor textarea").val());
 			$(element).html($("#visual-editable-content-txt-editor .editor").html());
 			closePopinVisualEditableContent(); // On ferme la popin
 			
@@ -399,83 +416,97 @@ var setVecLink;
 				$(element).find(tagsAssociation[i][1]).filter(function()
 				{
 					return (this.attributes.length === 0); // On le fait seulement si la balise de style ne contient aucun attribut
+					
 				}).replaceWith(function()
 				{
 					return '<span class="'+ tagsAssociation[i][0] +'">'+ $(this).html() +'</span>';
 				});
 			}
 			
-			// On enlève les balises a vide ou sans href
+			// On enlève les balises 'a' vides ou sans href
 			$(element).find("a:not([href])").contents().unwrap();
 			$(element).find("a:empty").remove();
+			
+			// Gestion de l'ajout de 'ul'
+			if ($(element).find("> ul").length > 0 && $(element).get(0).tagName.toLowerCase() == "p")
+			{
+				// On stocke dans un tableau toutes les listes nouvellement créées
+				var listArray = new Array();
+				$(element).find("> ul").each(function()
+				{
+					listArray.push(this);
+					$(this).replaceWith(function()
+					{
+						return '<div class="vec-list-tmp"></div>'; // On remplace les listes par une 'div' temporaire
+					});
+				});
+				
+				var vecTxtContainer = '<p';
+				$.each(element.attributes, function()
+				{
+					// this.attributes is not a plain object, but an array
+					// of attribute nodes, which contain both the name and value
+					if (this.specified)
+					{
+						if (this.name != "data-vec-attr-remove")
+						{
+							vecTxtContainer += ' '+ this.name +'="'+ this.value +'"';
+						}
+					}
+				});
+
+				
+				// On stocke le html dans une chaîne de caractères que l'on entoure
+				vecTxtContainer += ' data-vec-tmp="txt-ul">'+ $(element).html() +'</p>';
+				
+				// On remplace les 'div' temporaires par les listes que l'on avait stockées et on ferme et on ouvre des 'p' autour pour spliter la balise 'p' vec-txt container
+				var indexStart = 0;
+				var index = 0;
+				while (indexStart != -1)
+				{
+					indexStart = vecTxtContainer.indexOf('<div class="vec-list-tmp"></div>', indexStart);
+					if (indexStart != -1)
+					{
+						vecTxtContainer = vecTxtContainer.replace('<div class="vec-list-tmp"></div>', '</p><ul data-vec-tmp="ul-tmp">\n'+ $(listArray[index]).html() +'\n</ul><p data-vec-tmp="txt-ul-split">');
+					}
+					
+					index++;
+				}
+				
+				var newElement = jQuery.parseHTML(vecTxtContainer); // On transforme la chaîne de caractères en objet HTML
+				
+				$(element).after(newElement);
+				$(element).remove();
+			}
 		});
 		
-		$("#visual-editable-content-txt-editor .editor").on("paste", function(event)
+		// $("#visual-editable-content-txt-editor .editor").off("paste");
+		$("#visual-editable-content-txt-editor .editor").one("paste", function(event)
 		{
-			// console.log(event);
 			event.preventDefault();
 			
-			// console.log(window.clipboardData.getData("text"));
 			var textPaste = (event.originalEvent.clipboardData || window.clipboardData).getData("text");
-			// (event.originalEvent.clipboardData || window.clipboardData).setData("text", textPaste);
-			// event.target.value = textPaste;
-			document.execCommand('insertText', false, textPaste);
-
-
-			// console.log(textPaste);
-			// var paste = event;
 			
-			// var timerPaste = setTimeout(function()
-			// {
-				// console.log(paste.originalEvent.clipboardData.getData("text"));
-			// }, 1000);
-			
-			// var text = (event.originalEvent || event).clipboardData.getData("text/html");
-			// console.log(text);
+			document.execCommand("insertText", false, textPaste);
 		});
-		
-		/*$("#visual-editable-content-txt-editor").on("select", "textarea", function()
-		{
-			if (window.getSelection)
-			{
-				txt = window.getSelection();
-			}
-			else if (document.getSelection)
-			{
-				txt = document.getSelection();
-			}
-			else if (document.selection)
-			{
-				txt = document.selection.createRange().text;
-			}
-			
-			//console.log(txt);
-		});*/
-		
-		/*$("#visual-editable-content-txt-editor").on("mouseup", "textarea", function()
-		{
-			console.log(window.getSelection().toString());
-		});*/
 	}
 	
 	// Fonction permettant de gérer la popin d'édition d'une image
 	function openVisualEditableContentPicEditor(element)
 	{
 		var visualEditableContentPopinTop = $(element).offset().top;
-		$("#visual-editable-content-overlay, #visual-editable-content-pic-editor").css({"display": "block"});
+		
+		$("#visual-editable-content-overlay, #visual-editable-content-pic-editor").addClass("open");
 		$("#visual-editable-content-pic-editor").css({"top": visualEditableContentPopinTop +"px"});
 		
 		$("#visual-editable-content-pic-editor input[name='visual-editable-content-pic-editor-src']").val($(element).attr("src"));
+		$("#visual-editable-content-pic-editor input[name='visual-editable-content-pic-editor-alt']").val($(element).attr("alt"));
 		
 		
 		// On veut sélectionner une image de la librairie
 		$("#visual-editable-content-pic-editor").off("click", "#visual-editable-content-pic-selector");
 		$("#visual-editable-content-pic-editor").on("click", "#visual-editable-content-pic-selector", function()
 		{
-			// window.parent.wp.media.editor.open($(this));
-			
-			
-			
 			var frame = window.parent.wp.media(
 			{
 				title: 'Sélectionner une image',
@@ -485,22 +516,13 @@ var setVecLink;
 				},
 				library:
 				{
-					type : 'image'
+					type: 'image'
 				},
 				multiple: false  // Set to true to allow multiple files to be selected
 			});
 			
 			frame.open($(this));
 			
-			// original_send = window.parent.wp.media.editor.send.attachment; // Je ne sais pas à quoi ça sert, mais je le laisse, on sait jamais
-			
-			// On valide la sélection de l'image
-			/*window.parent.wp.media.editor.send.attachment = function(a, dataPic)
-			{
-				console.log(a);
-				console.log(dataPic);
-				$("#visual-editable-content-pic-editor input[name='visual-editable-content-pic-editor-src']").val(dataPic.sizes.full.url);
-			};*/
 			frame.on("select", function(a, dataPic)
 			{
 				var attachment = frame.state().get('selection').first().toJSON();
@@ -513,6 +535,45 @@ var setVecLink;
 		$("#visual-editable-content-pic-editor").one("click", "#visual-editable-content-pic-validate", function()
 		{
 			$(element).attr("src", $("#visual-editable-content-pic-editor input[name='visual-editable-content-pic-editor-src']").val());
+			$(element).attr("alt", $("#visual-editable-content-pic-editor input[name='visual-editable-content-pic-editor-alt']").val());
+			closePopinVisualEditableContent(); // On ferme la popin
+		});
+	}
+	
+	
+	// Fonction permettant de gérer la popin d'édition d'un carousel
+	function openVisualEditableContentCarouselEditor(element)
+	{
+		var visualEditableContentPopinTop = $(element).offset().top;
+		
+		$("#visual-editable-content-overlay, #visual-editable-content-carousel-editor").addClass("open");
+		$("#visual-editable-content-carousel-editor").css({"top": visualEditableContentPopinTop +"px"});
+		
+		$("#visual-editable-content-carousel-editor div.visual-editable-content-carousel-element-container").empty();
+		$(element).find("[data-vec='carousel-item']").each(function(index)
+		{
+			// var currentCarouselItem = $(this);
+			// currentCarouselItem.wrap('<div class="vec-carousel-item"></div>');
+			// $("#visual-editable-content-carousel-editor div.visual-editable-content-carousel-element-container").append($(currentCarouselItem).parent().html());
+			
+			$("#visual-editable-content-carousel-editor div.visual-editable-content-carousel-element-container").append
+			(
+				'<div class="line">'+
+					'<span class="num">'+ (index+1) +' - </span>'+
+					// <div class="editor-carousel" contenteditable="true">'+ $(this).html() +'</div>'+
+					'<textarea class="editor-carousel" name="visual-editable-content-carousel-editor-textarea">'+ $(this).html() +'</textarea>'+
+				'</div>'
+			);
+		});
+		
+		// On valide le changement d'un carousel
+		$("#visual-editable-content-carousel-editor").one("click", "#visual-editable-content-carousel-validate", function()
+		{
+			$(element).find("[data-vec='carousel-item']").each(function(index)
+			{
+				$(this).html($("#visual-editable-content-carousel-editor div.visual-editable-content-carousel-element-container .line:eq("+ (index) +") .editor-carousel").val());
+			});
+			
 			closePopinVisualEditableContent(); // On ferme la popin
 		});
 	}
@@ -521,129 +582,13 @@ var setVecLink;
 	// Fonction permettant de fermer la popin affichée
 	function closePopinVisualEditableContent()
 	{
-		$("#visual-editable-content-overlay, .visual-editable-content-popin").css({"display": "none"});
+		$("#visual-editable-content-overlay, .visual-editable-content-popin").removeClass("open");
 	}
 	
 	
 	// Fonction permettant d'entourer le texte sélectionné par une balise avec le style passé en paramètre
 	function visualEditableContentAddStyle(element, newClass)
 	{
-		/*var range = window.getSelection().getRangeAt(0);
-		
-		if (range.toString().length > 0) // S'il y a une sélection
-		{
-			var selectionStart = range.startOffset;
-			var selectionEnd = range.endOffset;
-			
-			var parentRange = range.commonAncestorContainer.parentElement;
-			
-			if (selectionStart == 0 && ($(parentRange).text().length == range.toString().length || selectionEnd == 0)) // Si l'utilisateur a sélectionné un texte juste entouré par une balise
-			{
-				if ($(parentRange).prop("tagName").toLowerCase() == "span")
-				{
-					if ($(parentRange).hasClass(newClass)) // Si le span parent a déjà la classe -> on la supprime
-						$(parentRange).removeClass(newClass);
-					else // Si le span parent n'a pas la classe -> on l'ajoute
-						$(parentRange).addClass(newClass);
-					
-					return false; // On s'arrête
-				}
-			}
-			
-			var selectedText = range.extractContents();
-			var preSelectionRange = range.cloneRange();
-			preSelectionRange.selectNodeContents(document.getElementById("editor"));
-			preSelectionRange.setEnd(range.startContainer, range.startOffset);
-			var start = preSelectionRange.toString().length;
-			var end = start + range.toString().length;
-			
-			var newNode = document.createElement("span");
-			$(newNode).addClass(newClass);
-			$(newNode).html(selectedText);
-			range.insertNode(newNode); // On insert la balise autour de la sélection
-		}*/
-		
-		// document.execCommand("insertHTML", false, '<span class="italic">test</span>');
 		document.execCommand(newClass, false, null);
-		// var listId = window.getSelection().focusNode.parentNode;
-		// var listId = getSelectionText().focusNode.parentNode;
-        // $(listId).addClass("vec-"+ newClass);
-		
-		
-		// Si on a une sélection dans le textarea
-		/*if (selectionStart > 0)
-		{
-			var selectionTmp;
-			if (selectionStart > selectionEnd)
-			{
-				selectionTmp = selectionEnd;
-				selectionEnd = selectionStart;
-				selectionStart = selectionTmp;
-			}
-			
-			// var textareaPart1 = $("#visual-editable-content-txt-editor textarea").val().substring(0, selectionStart);
-			// var textareaPart2 = $("#visual-editable-content-txt-editor textarea").val().substring(selectionStart, selectionEnd);
-			// var textareaPart3 = $("#visual-editable-content-txt-editor textarea").val().substring(selectionEnd, $("#visual-editable-content-txt-editor textarea").val().length);
-			
-			//console.log($("#visual-editable-content-txt-editor .editor").text());
-			var textareaPart1 = $("#visual-editable-content-txt-editor .editor").text().substring(0, selectionStart);
-			var textareaPart2 = $("#visual-editable-content-txt-editor .editor").text().substring(selectionStart, selectionEnd);
-			var textareaPart3 = $("#visual-editable-content-txt-editor .editor").text().substring(selectionEnd, $("#visual-editable-content-txt-editor .editor").text().length);
-			
-			// console.log(textareaPart1 +" || "+ textareaPart2)
-			
-			// var newTextareaVal = textareaPart1 +'<span class="'+ newClass +'">'+ textareaPart2 +'</span>'+ textareaPart3;
-			//$("#visual-editable-content-txt-editor textarea").val(newTextareaVal);
-			//console.log(newTextareaVal);
-			//$("#visual-editable-content-txt-editor .editor").html(newTextareaVal);
-		}*/
-	}
-	
-	function getSelectionText()
-	{
-		/*var valueSelected;
-		
-		if (window.getSelection)
-		{
-			try
-			{
-				var ta = $('textarea').get(0);
-				//return ta.value.substring(ta.selectionStart, ta.selectionEnd);
-				valueSelected = ta.value.substring(ta.selectionStart, ta.selectionEnd);
-			}
-			catch (e)
-			{
-				console.log('Cant get selection text')
-			}
-		}
-		// For IE
-		if (document.selection && document.selection.type != "Control")
-		{
-			//return document.selection.createRange().text;
-			valueSelected = document.selection.createRange().text;
-		}*/
-		
-		if (window.getSelection)
-		{
-			txt = window.getSelection();
-		}
-		else if (document.getSelection)
-		{
-			txt = document.getSelection();
-		}
-		else if (document.selection)
-		{
-			txt = document.selection.createRange().text;
-		}
-		
-		// console.log(valueSelected);
-		return txt;
 	}
 })(jQuery);
-
-/*function setVecLink(href)
-{
-	console.log(href);
-	
-	document.execCommand("CreateLink", false, href);
-}*/
