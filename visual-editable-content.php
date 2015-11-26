@@ -2,7 +2,7 @@
 	/*
 		Plugin name: Visual Editable Content
 		Description: Permet d'éditer visuellement les éléments d'une page Wordpress.
-		Version: 1.1.0
+		Version: 1.1.3
 		Author: Digital Effervescence - Frédéric Le Crom
 		Author URI: http://digital-effervescence.com
 		License: GPL2
