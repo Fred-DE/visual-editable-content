@@ -1,12 +1,16 @@
 <?php
 	/*
 		Plugin name: Visual Editable Content
+		Plugin URI: https://github.com/Fred-DE/visual-editable-content
 		Description: Permet d'éditer visuellement les éléments d'une page Wordpress.
-		Version: 1.1.3
+		Version: 1.1.4
 		Author: Digital Effervescence - Frédéric Le Crom
 		Author URI: http://digital-effervescence.com
 		License: GPL2
 		License URI: https://www.gnu.org/licenses/gpl-2.0.html
+		Text Domain: visual-editable-content
+		GitHub Plugin URI: https://github.com/Fred-DE/visual-editable-content
+		GitHub Branch: master
 	*/
 	
 	
