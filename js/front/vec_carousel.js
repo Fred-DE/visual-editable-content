@@ -18,7 +18,10 @@
 		this.fillWithBlank = arguments["fillWithBlank"] || false;
 		this.hasArrows = arguments["hasArrows"] || false;
 		this.hasNavigation = arguments["hasNavigation"] || false;
-		this.isLooping = arguments["isLooping"] || false;
+		if (typeof(arguments["isLooping"]) == "undefined")
+			this.isLooping = true
+		else
+			this.isLooping = arguments["isLooping"];
 		this.timerDuration = arguments["timerDuration"] || 0;
 		
 		VecCarousel.allInstances.push(this);
@@ -34,25 +37,33 @@
 		$(self.vecCarousel).off("click", ".vec-carousel-slide-button");
 		$(self.vecCarousel).on("click", ".vec-carousel-slide-button", function()
 		{
-			var newIndex;
+			if ($(this).attr("data-vec") == "carousel-left-button")
+				self.vecCarouselBeforeSlide("left");
+			else
+				self.vecCarouselBeforeSlide("right");
+			
+			/*var newIndex;
 			if ($(this).attr("data-vec") == "carousel-left-button")
 				newIndex = self.currentIndex - 1;
 			else
 				newIndex = self.currentIndex + 1;
 			
 			var loop = false;
-			if (newIndex < 0)
+			if (self.isLooping)
 			{
-				newIndex = $(self.vecCarousel).find("[data-vec-carousel-screen]").length - 1;
-				loop = true;
-			}
-			else if (newIndex > $(self.vecCarousel).find("[data-vec-carousel-screen]").length - 1)
-			{
-				newIndex = 0;
-				loop = true;
+				if (newIndex < 0)
+				{
+					newIndex = $(self.vecCarousel).find("[data-vec-carousel-screen]").length - 1;
+					loop = true;
+				}
+				else if (newIndex > $(self.vecCarousel).find("[data-vec-carousel-screen]").length - 1)
+				{
+					newIndex = 0;
+					loop = true;
+				}
 			}
 			
-			self.vecCarouselSlide(newIndex, loop);
+			self.vecCarouselSlide(newIndex, loop);*/
 		});
 		
 		// Clic sur la navigation
@@ -251,7 +262,12 @@
 		var diff = sliderTouchStartX - touches[0].pageX;
 		if (Math.abs(diff) > sliderThreshold)
 		{
-			var newIndex;
+			if (diff < 0)
+				this.vecCarouselBeforeSlide("left");
+			else
+				this.vecCarouselBeforeSlide("right");
+			
+			/*var newIndex;
 			if (diff < 0)
 				newIndex = this.currentIndex - 1;
 			else
@@ -269,8 +285,45 @@
 				loop = true;
 			}
 			
-			this.vecCarouselSlide(newIndex, loop);
+			this.vecCarouselSlide(newIndex, loop);*/
 		}
+	};
+	
+	
+	VecCarousel.prototype.vecCarouselBeforeSlide = function(direction)
+	{
+		var newIndex;
+		// if (diff < 0)
+		if (direction == "left")
+			newIndex = this.currentIndex - 1;
+		else
+			newIndex = this.currentIndex + 1;
+		
+		var loop = false;
+		if (newIndex < 0)
+		{
+			newIndex = $(this.vecCarousel).find("[data-vec-carousel-screen]").length - 1;
+			loop = true;
+			
+			if (!this.isLooping)
+			{
+				// $(this.vecCarousel).find("[data-vec='carousel-left-button']").addClass("hidden");
+				return false;
+			}
+		}
+		else if (newIndex > $(this.vecCarousel).find("[data-vec-carousel-screen]").length - 1)
+		{
+			newIndex = 0;
+			loop = true;
+			
+			if (!this.isLooping)
+			{
+				// $(this.vecCarousel).find("[data-vec='carousel-right-button']").addClass("hidden");
+				return false;
+			}
+		}
+		
+		this.vecCarouselSlide(newIndex, loop);
 	};
 	
 	
@@ -291,6 +344,7 @@
 			var direction = 1;
 			if (index < currentIndex)
 				direction = -1;*/
+			
 			var direction = 1;
 			if (index < self.currentIndex)
 				direction = -1;
@@ -329,7 +383,9 @@
 		{
 			if (!$(self.vecCarousel +":hover").length > 0) // Si le curseur est sur le carousel, on ne lance pas le slide
 			{
-				var newIndex;
+				self.vecCarouselBeforeSlide("right");
+				
+				/*var newIndex;
 				newIndex = self.currentIndex + 1;
 				
 				var loop = false;
@@ -339,7 +395,7 @@
 					loop = true;
 				}
 				
-				self.vecCarouselSlide(newIndex, loop);
+				self.vecCarouselSlide(newIndex, loop);*/
 			}
 		}, self.timerDuration);
 	};
