@@ -5,16 +5,11 @@
 (function($)
 {
 	// var vecCarousel = MONAPPLICATION || {};
+	// var VecCarousel = {};
 	
-	var mobileResolution = 1023;
 	
-	var durationVecCarouselSlide = 600;
 	
-	var sliderTouchStartX = 0;
-	// var sliderThreshold = 20;
-	var sliderThreshold = 50;
-	
-	window.VecCarousel = function(arguments)
+	/*window.*/VecCarousel = function(arguments)
 	{
 		var self = this;
 		
@@ -25,6 +20,8 @@
 		this.hasNavigation = arguments["hasNavigation"] || false;
 		this.isLooping = arguments["isLooping"] || false;
 		this.timerDuration = arguments["timerDuration"] || 0;
+		
+		VecCarousel.allInstances.push(this);
 		
 		this.currentIndex = 0;
 		this.isAnimatingVecCarouselSlide = false;
@@ -91,6 +88,18 @@
 			self.timerManager();
 		}
 	};
+	
+	
+	
+	VecCarousel.allInstances = new Array();
+	
+	var mobileResolution = 1023;
+	
+	var durationVecCarouselSlide = 600;
+	
+	var sliderTouchStartX = 0;
+	var sliderThreshold = 50;
+	
 	
 	// Permet d'attendre que les images du carousel soient chargée avant de l'afficher
 	VecCarousel.prototype.loadPictures = function()
@@ -334,4 +343,20 @@
 			}
 		}, self.timerDuration);
 	};
+	
+	
+	// Méthode statique permettant de retourner l'instance du VecCarousel qui appartient au carousel dont l'ID est passé en paramètre.
+	VecCarousel.getInstanceById = function(idElement)
+	{
+		var idElementToCompare = "#"+ idElement;
+		
+		for (var i = 0; i < VecCarousel.allInstances.length; i++)
+		{
+			if (idElementToCompare == VecCarousel.allInstances[i].vecCarousel)
+			{
+				return VecCarousel.allInstances[i];
+				break;
+			}
+		}
+	}
 })(jQuery);

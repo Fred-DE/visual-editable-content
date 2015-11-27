@@ -23,8 +23,11 @@ html #wpadminbar {display: none !important;}
 .visual-editable-content-popin .editor,
 .visual-editable-content-popin .editor-carousel {display: block; width: 80%; height: 400px; overflow: auto; margin: 0 auto; padding: 5px; border: 2px solid #000000; resize: none;}
 
-.visual-editable-content-popin .line {padding: 10px 0; text-align: justify;}
+.visual-editable-content-popin .line {padding: 10px 0; text-align: justify; -webkit-transition: opacity 400ms ease 0s; transition: opacity 400ms ease 0s;}
 .visual-editable-content-popin .line:after {content: ""; display: inline-block; width: 100%;}
+.visual-editable-content-popin .line.add {opacity: 0;}
+.visual-editable-content-popin .line.added {opacity: 1;}
+.visual-editable-content-popin .line.deleted {opacity: 0;}
 .visual-editable-content-popin .line .num {display: inline-block; width: 15%;}
 .visual-editable-content-popin .line .editor-carousel {display: inline-block; vertical-align: middle; height: 100px; resize: both;}
 
@@ -53,4 +56,8 @@ html #wpadminbar {display: none !important;}
 .visual-editable-content-txt-button.visual-editable-content-txt-button-link span {font-size: 12px;}
 .visual-editable-content-txt-button.visual-editable-content-txt-button-unlink span {font-size: 12px; text-decoration: line-through;}
 .visual-editable-content-txt-button.visual-editable-content-txt-button-list span {background: transparent url(../images/editor_buttons/list.png) no-repeat center center; width: 20px; height: 20px; vertical-align: -1px;}
+
+.carousel-buttons {text-align: right; padding: 5px 5% 0 0;}
+.visual-editable-content-txt-button.visual-editable-content-txt-button-carousel-add span {font-size: 28px; line-height: 27px; color: #0000FF;}
+.visual-editable-content-txt-button.visual-editable-content-txt-button-carousel-delete span {font-size: 32px; line-height: 27px; color: #FF0000; -webkit-transform: rotate(45deg); transform: rotate(45deg);}
 

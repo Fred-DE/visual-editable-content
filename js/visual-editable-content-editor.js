@@ -550,7 +550,7 @@ var setVecLink;
 		$("#visual-editable-content-carousel-editor").css({"top": visualEditableContentPopinTop +"px"});
 		
 		$("#visual-editable-content-carousel-editor div.visual-editable-content-carousel-element-container").empty();
-		$(element).find("[data-vec='carousel-item']").each(function(index)
+		$(element).find("[data-vec~='carousel-item']:not([data-vec-item-blank])").each(function(index)
 		{
 			// var currentCarouselItem = $(this);
 			// currentCarouselItem.wrap('<div class="vec-carousel-item"></div>');
@@ -562,19 +562,81 @@ var setVecLink;
 					'<span class="num">'+ (index+1) +' - </span>'+
 					// <div class="editor-carousel" contenteditable="true">'+ $(this).html() +'</div>'+
 					'<textarea class="editor-carousel" name="visual-editable-content-carousel-editor-textarea">'+ $(this).html() +'</textarea>'+
+					
+					'<div class="carousel-buttons">'+
+						'<span class="visual-editable-content-txt-button visual-editable-content-txt-button-carousel-add" title="Ajouter un élément après"><span>+</span></span>'+
+						'<span class="visual-editable-content-txt-button visual-editable-content-txt-button-carousel-delete" title="Supprimer l\'élément"><span>+</span></span>'+
+					'</div>'+
 				'</div>'
 			);
+		});
+		
+		// On veut ajouter un item au carousel
+		$("#visual-editable-content-carousel-editor").off("click", ".visual-editable-content-txt-button-carousel-add");
+		$("#visual-editable-content-carousel-editor").on("click", ".visual-editable-content-txt-button-carousel-add", function()
+		{
+			var thisLine = $(this).parents(".line");
+			$(thisLine).after
+			(
+				'<div class="line add">'+
+					'<span class="num"></span>'+
+					'<textarea class="editor-carousel" name="visual-editable-content-carousel-editor-textarea">'+ $(thisLine).find(".editor-carousel").val() +'</textarea>'+
+					
+					'<div class="carousel-buttons">'+
+						'<span class="visual-editable-content-txt-button visual-editable-content-txt-button-carousel-add" title="Ajouter un élément après"><span>+</span></span>'+
+						'<span class="visual-editable-content-txt-button visual-editable-content-txt-button-carousel-delete" title="Supprimer l\'élément"><span>+</span></span>'+
+					'</div>'+
+				'</div>'
+			);
+			var timerShowAddedItem = setTimeout(function()
+			{
+				$(thisLine).next().addClass("added").removeClass("add");
+				
+			}, 100);
+			
+			resetCarouselNums();
+		});
+		
+		// On veut supprimer un item du carousel
+		$("#visual-editable-content-carousel-editor").off("click", ".visual-editable-content-txt-button-carousel-delete");
+		$("#visual-editable-content-carousel-editor").on("click", ".visual-editable-content-txt-button-carousel-delete", function()
+		{
+			$(this).parents(".line").addClass("deleted");
+			
+			resetCarouselNums();
 		});
 		
 		// On valide le changement d'un carousel
 		$("#visual-editable-content-carousel-editor").one("click", "#visual-editable-content-carousel-validate", function()
 		{
-			$(element).find("[data-vec='carousel-item']").each(function(index)
+			/*$(element).find("[data-vec~='carousel-item']").each(function(index)
 			{
 				$(this).html($("#visual-editable-content-carousel-editor div.visual-editable-content-carousel-element-container .line:eq("+ (index) +") .editor-carousel").val());
-			});
+			});*/
+			
+			var carouselItem = $(element).find("[data-vec~='carousel-item']").get(0);
+			$(element).empty();
+			
+			for (var i = 0; i < $("#visual-editable-content-carousel-editor div.visual-editable-content-carousel-element-container .line:not(.deleted)").length; i++)
+			{
+				$(element).append($(carouselItem).wrap('<div></div>').parent().html());
+				$(element).find("[data-vec~='carousel-item']:last-child").html($("#visual-editable-content-carousel-editor div.visual-editable-content-carousel-element-container .line:not(.deleted):eq("+ (i) +") .editor-carousel").val());
+			}
+			
+			var currentCarousel = VecCarousel.getInstanceById($(element).parent().attr("id"));
+			currentCarousel.setVecCarousel();
+			currentCarousel.loadPictures();
+			
 			
 			closePopinVisualEditableContent(); // On ferme la popin
+		});
+	}
+	
+	function resetCarouselNums()
+	{
+		$("#visual-editable-content-carousel-editor div.visual-editable-content-carousel-element-container div.line:not(.deleted)").each(function(index)
+		{
+			$(this).find("span.num").text((index+1) +" - ");
 		});
 	}
 	
