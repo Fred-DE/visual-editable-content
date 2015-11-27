@@ -105,10 +105,10 @@
 		// wp_register_script("wp_link_js", "/". WPINC .'/js/wplink.min.js', "jquery", "1.0");
 		// wp_enqueue_script("wp_link_js");
 		
-		wp_register_script("vec_carousel", plugin_dir_url( __FILE__ ) .'js/front/vec_carousel.js', "jquery", "1.0");
+		wp_register_script("vec_carousel", plugin_dir_url( __FILE__ ) .'js/front/vec_carousel.js', array("jquery"), "1.0");
 		wp_enqueue_script("vec_carousel");
 		
-		wp_register_script("vec_transitions", plugin_dir_url( __FILE__ ) .'js/front/vec_transitions.js', "jquery", "1.0");
+		wp_register_script("vec_transitions", plugin_dir_url( __FILE__ ) .'js/front/vec_transitions.js', array("jquery"), "1.0");
 		wp_enqueue_script("vec_transitions");
 		
 		// wp_enqueue_style("visual_editable_content_front_css", plugin_dir_url( __FILE__ ) ."css/visual-editable-content-front.css", array(), false, "screen");
@@ -146,7 +146,7 @@
 		wp_enqueue_style("visual_editable_content_css", plugin_dir_url( __FILE__ ) ."css/visual-editable-content.css", array(), false, "screen");
 		
 		// Javascript
-		wp_register_script("visual_editable_content_js", plugin_dir_url( __FILE__ ) ."js/visual-editable-content.js", "jquery", "1.0");
+		wp_register_script("visual_editable_content_js", plugin_dir_url( __FILE__ ) ."js/visual-editable-content.js", array("jquery"), "1.0");
 		wp_enqueue_script("visual_editable_content_js");
 		
 		//wp_localize_script("visual_editable_content_js", "visualEditableContentVariables", array("path" => plugin_dir_url( __FILE__ ), "ajaxurl" => admin_url("admin-ajax.php")));
