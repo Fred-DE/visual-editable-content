@@ -58,6 +58,8 @@ html #wpadminbar {display: none !important;}
 .visual-editable-content-txt-button.visual-editable-content-txt-button-list span {background: transparent url(../images/editor_buttons/list.png) no-repeat center center; width: 20px; height: 20px; vertical-align: -1px;}
 
 .carousel-buttons {text-align: right; padding: 5px 5% 0 0;}
-.visual-editable-content-txt-button.visual-editable-content-txt-button-carousel-add span {font-size: 28px; line-height: 27px; color: #0000FF;}
+.editor-extra-buttons {text-align: right; padding: 5px 10% 0 0;}
+.visual-editable-content-txt-button.visual-editable-content-txt-button-carousel-add span,
+.visual-editable-content-txt-button.visual-editable-content-txt-button-list-add span {font-size: 28px; line-height: 27px; color: #0000FF;}
 .visual-editable-content-txt-button.visual-editable-content-txt-button-carousel-delete span {font-size: 32px; line-height: 27px; color: #FF0000; -webkit-transform: rotate(45deg); transform: rotate(45deg);}
 

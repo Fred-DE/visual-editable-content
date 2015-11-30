@@ -372,14 +372,19 @@ var setVecLink;
 	function openVisualEditableContentTxtEditor(element)
 	{
 		$("#visual-editable-content-txt-editor div.visual-editable-content-txt-button").removeClass("remove");
+		$("div.editor-extra-buttons div.visual-editable-content-txt-button-list-add").addClass("remove");
 		// Si on édite un 'li'
 		if ($(element).get(0).tagName.toLowerCase() == "li")
 		{
 			// On ne veut pas laisser la possibilité d'ajouter un 'ul' à l'intérieur
 			$("#visual-editable-content-txt-editor div.visual-editable-content-txt-button-list").addClass("remove");
+			
+			// On veut donner la possibilité d'ajouter un élément de liste 'li'
+			$("div.editor-extra-buttons div.visual-editable-content-txt-button-list-add").removeClass("remove");
 		}
 		
-		var visualEditableContentPopinTop = $(element).offset().top;
+		// var visualEditableContentPopinTop = $(element).offset().top;
+		var visualEditableContentPopinTop = $(window).scrollTop() + 100;
 		
 		$("#visual-editable-content-overlay, #visual-editable-content-txt-editor").addClass("open");
 		$("#visual-editable-content-txt-editor").css({"top": visualEditableContentPopinTop +"px"});
@@ -395,14 +400,24 @@ var setVecLink;
 			});
 		}
 		
-		/*$("div.visual-editable-content-popin").on("click", function(event)
+		
+		// On clique sur le bouton d'ajout d'un élément d'une liste
+		$(".editor-extra-buttons").off("mousedown", ".visual-editable-content-txt-button-list-add");
+		$(".editor-extra-buttons").on("mousedown", ".visual-editable-content-txt-button-list-add", function()
 		{
-			console.log("click");
-		}).children().on("click", function(event)
-		{
-			console.log("children");
-			return false;
-		});*/
+			// var liToAdd = $(element).get(0);
+			// $(element).after($(liToAdd).wrap('<div></div>').parent().html());
+			$(element).after($(element).clone().wrap("<div></div>").parent().html());
+			// $(element).unwrap();
+			// $(element).next().attr("data-vec-added", "li");
+			// $(element).next().removeAttr("data-vec");
+			// $(element).attr("data-vec-insert", "after");
+			$(element).next().attr("data-vec-added", "li");
+			// closePopinVisualEditableContent();
+			$("#visual-editable-content-txt-editor #visual-editable-content-txt-validate").trigger("click");
+		});
+		
+		
 		
 		// On valide le changement d'un texte
 		$("#visual-editable-content-txt-editor").one("click", "#visual-editable-content-txt-validate", function()
@@ -410,7 +425,7 @@ var setVecLink;
 			$(element).html($("#visual-editable-content-txt-editor .editor").html());
 			closePopinVisualEditableContent(); // On ferme la popin
 			
-			// On remplace les balises de style (i, u, b, ...) par des span
+			// On remplace les balises de style (i, u, b,...) par des span
 			for (var i = 0; i < tagsAssociation.length; i++)
 			{
 				$(element).find(tagsAssociation[i][1]).filter(function()
@@ -494,7 +509,8 @@ var setVecLink;
 	// Fonction permettant de gérer la popin d'édition d'une image
 	function openVisualEditableContentPicEditor(element)
 	{
-		var visualEditableContentPopinTop = $(element).offset().top;
+		// var visualEditableContentPopinTop = $(element).offset().top;
+		var visualEditableContentPopinTop = $(window).scrollTop() + 100;
 		
 		$("#visual-editable-content-overlay, #visual-editable-content-pic-editor").addClass("open");
 		$("#visual-editable-content-pic-editor").css({"top": visualEditableContentPopinTop +"px"});
@@ -544,7 +560,8 @@ var setVecLink;
 	// Fonction permettant de gérer la popin d'édition d'un carousel
 	function openVisualEditableContentCarouselEditor(element)
 	{
-		var visualEditableContentPopinTop = $(element).offset().top;
+		// var visualEditableContentPopinTop = $(element).offset().top;
+		var visualEditableContentPopinTop = $(window).scrollTop() + 100;
 		
 		$("#visual-editable-content-overlay, #visual-editable-content-carousel-editor").addClass("open");
 		$("#visual-editable-content-carousel-editor").css({"top": visualEditableContentPopinTop +"px"});
@@ -583,8 +600,8 @@ var setVecLink;
 					'<textarea class="editor-carousel" name="visual-editable-content-carousel-editor-textarea">'+ $(thisLine).find(".editor-carousel").val() +'</textarea>'+
 					
 					'<div class="carousel-buttons">'+
-						'<span class="visual-editable-content-txt-button visual-editable-content-txt-button-carousel-add" title="Ajouter un élément après"><span>+</span></span>'+
-						'<span class="visual-editable-content-txt-button visual-editable-content-txt-button-carousel-delete" title="Supprimer l\'élément"><span>+</span></span>'+
+						'<div class="visual-editable-content-txt-button visual-editable-content-txt-button-carousel-add" title="Ajouter un élément après"><span>+</span></div>'+
+						'<div class="visual-editable-content-txt-button visual-editable-content-txt-button-carousel-delete" title="Supprimer l\'élément"><span>+</span></div>'+
 					'</div>'+
 				'</div>'
 			);

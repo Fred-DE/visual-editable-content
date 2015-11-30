@@ -183,11 +183,22 @@ function saveVisualEditableContent(data)
 	// On enlève des noeuds vides
 	jQuery(mainTextareaContent).find("#visual-editable-content-container-vec-content [data-vec-tmp='txt-ul-split']:empty").remove();
 	
+	
+	
+	var offsetIndexDataHtml = 0;
 	// On remplace les textes
 	jQuery(mainTextareaContent).find("#visual-editable-content-container-vec-content [data-vec~='txt']").each(function(index)
 	{
+		// offsetIndexDataHtml = 0;
+		while (typeof(jQuery(dataHtml).find("[data-vec~='txt']:eq("+ (index + offsetIndexDataHtml) +")").attr("data-vec-added")) != "undefined") // Tant que c'est un noeud qui a été ajouté
+		{
+			jQuery(mainTextareaContent).find("#visual-editable-content-container-vec-content [data-vec~='txt']:eq("+ (index + offsetIndexDataHtml - 1) +")").after(getHtmlWithGoodAttr(jQuery(dataHtml).find("[data-vec~='txt']:eq("+ (index + offsetIndexDataHtml) +")").wrap("<div></div>").parent().html()));
+			offsetIndexDataHtml++;
+		}
+		
+		
 		// On remplace les contenus des noeuds textes éditables par ceux susceptibles d'avoir été édités
-		jQuery(this).html(jQuery(dataHtml).find("[data-vec~='txt']:eq("+ index +")").html());
+		jQuery(this).html(jQuery(dataHtml).find("[data-vec~='txt']:eq("+ (index + offsetIndexDataHtml) +")").html());
 		var nodeWithGoodAttr = getHtmlWithGoodAttr(this);
 		jQuery(this).html(jQuery(nodeWithGoodAttr).html());
 	});
@@ -226,6 +237,7 @@ function saveVisualEditableContent(data)
 		
 		jQuery(this).html(carouselContent);
 	});
+	
 	
 	jQuery(mainTextareaContent).find("[data-vec='content']").unwrap(); // On enlève la 'div' que l'on a ajoutée autour du vec="content"
 	
@@ -287,16 +299,20 @@ function saveVisualEditableContent(data)
 		jQuery(mainTextareaContent).find("."+ scriptsArray[i]["class"]).append(script); // On ajoute les scripts à la fin de la page
 	}
 	
+	// mainTextareaContent = insertNewElements(mainTextareaContent, dataHtml);
 	
 	mainTextareaContent = cleanupContent(mainTextareaContent);
 	
 	
 	jQuery("textarea#content").val(jQuery(mainTextareaContent).html()); // On insère le contenu dans le textarea WordPress
+	
+	closeVisualEditableContent();
 }
 
 
 function getHtmlWithGoodAttr(vecNode)
 {
+	// console.log(jQuery(vecNode).html());
 	jQuery(vecNode).find("[data-vec-attr-remove]").each(function()
 	{
 		var stringAttr = jQuery(this).attr("data-vec-attr-remove");
@@ -310,7 +326,10 @@ function getHtmlWithGoodAttr(vecNode)
 				jQuery(this).removeAttr("data-vec-tmp-"+ arrayAttr[i]);
 			}
 			else
-				jQuery(this).removeAttr(arrayAttr[i]);
+			{
+				// if (arrayAttr[i] != "data-vec-insert")
+					jQuery(this).removeAttr(arrayAttr[i]);
+			}
 		}
 	});
 	
@@ -371,6 +390,19 @@ function openLinksPopin()
 }
 
 
+/*function insertNewElements(mainTextareaContent, dataHtml)
+{
+	// console.log(jQuery(mainTextareaContent).html());
+	// On remplace les textes
+	jQuery(dataHtml).find("[data-vec-insert='after']").each(function(index)
+	{
+		// console.log("yo");
+	});
+	
+	return mainTextareaContent;
+}*/
+
+
 // Fonction permettant de 'nettoyer' certains éléments du contenu final.
 function cleanupContent(contentToCleanup)
 {
@@ -385,6 +417,8 @@ function cleanupContent(contentToCleanup)
 		
 		jQuery(this).removeAttr("data-vec-tmp"); // On enlève l'attribut temporaire
 	});
+	
+	jQuery(contentToCleanup).find("[data-vec~='txt']").removeAttr("data-vec-attr-remove").removeAttr("data-vec-added").removeAttr();
 	
 	// Nettoyage des 'p' rajoutés lors de l'ajout des 'ul'
 	jQuery(contentToCleanup).find("[data-vec-tmp='txt-ul-split']").each(function()
@@ -416,6 +450,8 @@ function cleanupContent(contentToCleanup)
 // On ferme le module (pas utilisé finalement)
 function closeVisualEditableContent()
 {
-	jQuery("#visual-editable-content-editor").attr("src", "");
-	jQuery("#visual-editable-content-show").css({"display": "inline-block"});
+	// jQuery("#visual-editable-content-editor").attr("src", "");
+	// jQuery("#visual-editable-content-show").css({"display": "inline-block"});
+	jQuery("#visual-editable-content-show").remove();
+	jQuery("#visual-editable-content-editor").remove();
 }
