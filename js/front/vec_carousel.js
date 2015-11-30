@@ -244,6 +244,8 @@
 		{
 			$(self.vecCarousel).find("[data-vec='carousel-nav']").css({"display": "none"});
 		}
+		
+		self.vecCarouselAfterSlide();
 	};
 	
 	
@@ -363,6 +365,8 @@
 				self.isAnimatingVecCarouselSlide = false;
 				self.currentIndex = index;
 				
+				self.vecCarouselAfterSlide();
+				
 				if (self.timerDuration != 0) // Si on a un timer, on le reset
 				{
 					clearInterval(self.timerInterval);
@@ -371,6 +375,30 @@
 			}});
 			
 			$(self.vecCarousel).find("[data-vec-carousel-screen='"+ self.currentIndex +"']").animate({"left": -(100 * direction) +"%"}, {duration: durationVecCarouselSlide, easing: "linear"});
+		}
+	};
+	
+	VecCarousel.prototype.vecCarouselAfterSlide = function()
+	{
+		if (this.hasArrows && !this.isLooping)
+		{
+			if (this.currentIndex == 0)
+			{
+				$(this.vecCarousel).find("[data-vec='carousel-left-button']").addClass("hidden");
+			}
+			else
+			{
+				$(this.vecCarousel).find("[data-vec='carousel-left-button']").removeClass("hidden");
+			}
+			
+			if (this.currentIndex == $(this.vecCarousel).find("[data-vec-carousel-screen]").length - 1)
+			{
+				$(this.vecCarousel).find("[data-vec='carousel-right-button']").addClass("hidden");
+			}
+			else
+			{
+				$(this.vecCarousel).find("[data-vec='carousel-right-button']").removeClass("hidden");
+			}
 		}
 	};
 	
