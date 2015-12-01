@@ -437,7 +437,7 @@ function cleanupContent(contentToCleanup)
 	});
 	jQuery(contentToCleanup).find("ul:empty").remove();
 	
-	// On enlève les span vides
+	// On enlève les span vides (ou avec un 'br')
 	jQuery(contentToCleanup).find("[data-vec~='txt'] span").each(function()
 	{
 		if (jQuery(this).html() == "<br>" || jQuery(this).html() == "<br />" || jQuery.trim(jQuery(this).html()) == "")
@@ -448,7 +448,7 @@ function cleanupContent(contentToCleanup)
 }
 
 
-// On ferme le module (pas utilisé finalement)
+// On ferme le module (pas utilisé finalement) (utilisé finalement)
 function closeVisualEditableContent()
 {
 	// jQuery("#visual-editable-content-editor").attr("src", "");
