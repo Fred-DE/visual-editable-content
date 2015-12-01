@@ -219,7 +219,7 @@ var setVecLink;
 		
 		
 		// On clique sur un carousel
-		$("[data-vec='content']").on("click", "[data-vec~='carousel-container']", function(event)
+		$("[data-vec='content']").on("click", "[data-vec~='carousel-container']:not([data-vec~='no-edit'])", function(event)
 		{
 			event.stopPropagation();
 			

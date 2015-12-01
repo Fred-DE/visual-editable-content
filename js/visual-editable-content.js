@@ -189,13 +189,12 @@ function saveVisualEditableContent(data)
 	// On remplace les textes
 	jQuery(mainTextareaContent).find("#visual-editable-content-container-vec-content [data-vec~='txt']").each(function(index)
 	{
-		// offsetIndexDataHtml = 0;
 		while (typeof(jQuery(dataHtml).find("[data-vec~='txt']:eq("+ (index + offsetIndexDataHtml) +")").attr("data-vec-added")) != "undefined") // Tant que c'est un noeud qui a été ajouté
 		{
+			// On ajoute ce noeud juste après le noeud précédent
 			jQuery(mainTextareaContent).find("#visual-editable-content-container-vec-content [data-vec~='txt']:eq("+ (index + offsetIndexDataHtml - 1) +")").after(getHtmlWithGoodAttr(jQuery(dataHtml).find("[data-vec~='txt']:eq("+ (index + offsetIndexDataHtml) +")").wrap("<div></div>").parent().html()));
 			offsetIndexDataHtml++;
 		}
-		
 		
 		// On remplace les contenus des noeuds textes éditables par ceux susceptibles d'avoir été édités
 		jQuery(this).html(jQuery(dataHtml).find("[data-vec~='txt']:eq("+ (index + offsetIndexDataHtml) +")").html());

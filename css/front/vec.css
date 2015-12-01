@@ -89,34 +89,34 @@
 
 
 /* VEC CAROUSEL */
-div[data-vec='carousel-container'] {position: relative; overflow: hidden; /*margin-bottom: 40px;*/ display: inline-block; vertical-align: middle; width: 100%;}
-div[data-vec='carousel-container'] div[data-vec-carousel-screen] {position: absolute; width: 100%; /*height: 100%;*/ left: 100%;}
-div[data-vec='carousel-container'] div[data-vec-carousel-screen]:first-child {left: 0px;}
+div[data-vec~='carousel-container'] {position: relative; overflow: hidden; /*margin-bottom: 40px;*/ display: inline-block; vertical-align: middle; width: 100%;}
+div[data-vec~='carousel-container'] div[data-vec-carousel-screen] {position: absolute; width: 100%; /*height: 100%;*/ left: 100%;}
+div[data-vec~='carousel-container'] div[data-vec-carousel-screen]:first-child {left: 0px;}
 
 .vec-carousel-slide-button {display: inline-block; vertical-align: middle; width: 33px; height: 81px; cursor: pointer;}
 .vec-carousel-slide-button.hidden {visibility: hidden;}
-.vec-carousel-slide-button[data-vec='carousel-left-button'] {background: transparent url(../../images/buttons/carousel_arrow_left.png) no-repeat center top; margin-right: 50px;}
-.vec-carousel-slide-button[data-vec='carousel-right-button'] {background: transparent url(../../images/buttons/carousel_arrow_right.png) no-repeat center top; margin-left: 50px;}
+.vec-carousel-slide-button[data-vec~='carousel-left-button'] {background: transparent url(../../images/buttons/carousel_arrow_left.png) no-repeat center top; margin-right: 50px;}
+.vec-carousel-slide-button[data-vec~='carousel-right-button'] {background: transparent url(../../images/buttons/carousel_arrow_right.png) no-repeat center top; margin-left: 50px;}
 .vec-carousel-slide-button:hover {background-position: center bottom;}
 
-div[data-vec='carousel-container'] div[data-vec-item-blank] {visibility: hidden;}
+div[data-vec~='carousel-container'] div[data-vec-item-blank] {visibility: hidden;}
 
-div[data-vec='carousel-nav'] {text-align: center;}
-div[data-vec='carousel-nav'] .vec-carousel-nav-button {display: inline-block; width: 40px; height: 30px; margin-right: 5px; cursor: pointer;}
-div[data-vec='carousel-nav'] .vec-carousel-nav-button:last-child {margin-right: 0px;}
-div[data-vec='carousel-nav'] .vec-carousel-nav-button .shape {background-color: #FFFFFF; opacity: 0.5; width: 100%; height: 3px; margin-top: 33%;}
-div[data-vec='carousel-nav'].grey .vec-carousel-nav-button .shape {background-color: #58585A;}
-div[data-vec='carousel-nav'] .vec-carousel-nav-button.active .shape,
-div[data-vec='carousel-nav'] .vec-carousel-nav-button:hover .shape {opacity: 0.9;}
+div[data-vec~='carousel-nav'] {text-align: center;}
+div[data-vec~='carousel-nav'] .vec-carousel-nav-button {display: inline-block; width: 40px; height: 30px; margin-right: 5px; cursor: pointer;}
+div[data-vec~='carousel-nav'] .vec-carousel-nav-button:last-child {margin-right: 0px;}
+div[data-vec~='carousel-nav'] .vec-carousel-nav-button .shape {background-color: #FFFFFF; opacity: 0.5; width: 100%; height: 3px; margin-top: 33%;}
+div[data-vec~='carousel-nav'].grey .vec-carousel-nav-button .shape {background-color: #58585A;}
+div[data-vec~='carousel-nav'] .vec-carousel-nav-button.active .shape,
+div[data-vec~='carousel-nav'] .vec-carousel-nav-button:hover .shape {opacity: 0.9;}
 
 
-div[data-vec='carousel-nav'].points {text-align: center; margin-top: 18px;}
-div[data-vec='carousel-nav'].points .vec-carousel-nav-button {display: inline-block; vertical-align: middle; width: 25px; height: 20px; line-height: 20px; text-align: center; margin-right: 0px; cursor: pointer;}
-div[data-vec='carousel-nav'].points .vec-carousel-nav-button:last-child {margin-right: 0px;}
-div[data-vec='carousel-nav'].points .vec-carousel-nav-button .shape {background-color: #A7A8AA; display: inline-block; vertical-align: middle; /*opacity: 0.5;*/ width: 7px; height: 7px; border-radius: 10px; margin: 0 auto; box-sizing: content-box;}
-/*div[data-vec='carousel-nav'].grey .vec-carousel-nav-button .shape {background-color: #A7A8AA;}*/
-div[data-vec='carousel-nav'].points .vec-carousel-nav-button.active .shape,
-div[data-vec='carousel-nav'].points .vec-carousel-nav-button:hover .shape {background-color: #FFFFFF; border: 6px solid #EDEDEE;}
+div[data-vec~='carousel-nav'].points {text-align: center; margin-top: 18px;}
+div[data-vec~='carousel-nav'].points .vec-carousel-nav-button {display: inline-block; vertical-align: middle; width: 25px; height: 20px; line-height: 20px; text-align: center; margin-right: 0px; cursor: pointer;}
+div[data-vec~='carousel-nav'].points .vec-carousel-nav-button:last-child {margin-right: 0px;}
+div[data-vec~='carousel-nav'].points .vec-carousel-nav-button .shape {background-color: #A7A8AA; display: inline-block; vertical-align: middle; /*opacity: 0.5;*/ width: 7px; height: 7px; border-radius: 10px; margin: 0 auto; box-sizing: content-box;}
+/*div[data-vec~='carousel-nav'].grey .vec-carousel-nav-button .shape {background-color: #A7A8AA;}*/
+div[data-vec~='carousel-nav'].points .vec-carousel-nav-button.active .shape,
+div[data-vec~='carousel-nav'].points .vec-carousel-nav-button:hover .shape {background-color: #FFFFFF; border: 6px solid #EDEDEE;}
 
 
 

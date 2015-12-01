@@ -78,13 +78,13 @@
 		if ($(self.vecCarousel).find(".data-vec-carousel-screen-content").length > 1)
 		{
 			$(self.vecCarousel).off("touchstart");
-			$(self.vecCarousel).on("touchstart", "[data-vec='carousel-container']", function(event)
+			$(self.vecCarousel).on("touchstart", "[data-vec~='carousel-container']", function(event)
 			{
 				if ($(self.vecCarousel).find(".data-vec-carousel-screen-content").length > 1)
 					self.vecCarouselTouchStart(event);
 			});
 			$(self.vecCarousel).off("touchmove");
-			$(self.vecCarousel).on("touchmove", "[data-vec='carousel-container']", function(event)
+			$(self.vecCarousel).on("touchmove", "[data-vec~='carousel-container']", function(event)
 			{
 				if ($(self.vecCarousel).find(".data-vec-carousel-screen-content").length > 1)
 					self.vecCarouselTouchMove(event);
@@ -188,7 +188,7 @@
 			if ($(this).height() > maxHeightCarouselScreen)
 				maxHeightCarouselScreen = $(this).height();
 		});
-		$(self.vecCarousel).find("div[data-vec='carousel-container']").css({"height": maxHeightCarouselScreen +"px"});
+		$(self.vecCarousel).find("div[data-vec~='carousel-container']").css({"height": maxHeightCarouselScreen +"px"});
 		$(self.vecCarousel).find("div[data-vec-carousel-screen]").css({"height": "100%"});
 		
 		$(self.vecCarousel).find("[data-vec='carousel-item']").after(" "); // Pour ajouter un espace entre les balises pour que le justify fonctionne
