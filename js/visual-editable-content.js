@@ -133,12 +133,14 @@ function saveVisualEditableContent(data)
 		// console.log("text-ul");
 		// var dataVecPrev = jQuery(this).prevAll("[data-vec='txt']").index();
 		// var dataVecPrev = jQuery(this).prevAll("[data-vec~='txt']").first(); // On récupère le data-vec="txt" le plus proche positionné avant le ul courant
-		var allDataVecTxt = jQuery(dataHtml).find("[data-vec~='txt']");
+		// var allDataVecTxt = jQuery(dataHtml).find("[data-vec~='txt']");
+		var allDataVecTxt = jQuery(dataHtml).find("[data-vec~='txt']:not([data-vec-added])");
+		// console.log(allDataVecTxt);
 		var dataVecPrev = allDataVecTxt.eq(allDataVecTxt.index(this) - 1); // On récupère le data-vec="txt" le plus proche positionné avant le ul courant
 		
 		// console.log(dataVecPrev);
 		// var indexVecTxt = jQuery(dataHtml).index(dataVecPrev);
-		var indexVecTxt = jQuery(dataHtml).find("[data-vec~='txt']").index(dataVecPrev); // On récupère l'index du data-vec="txt" récupéré juste avant
+		var indexVecTxt = jQuery(dataHtml).find("[data-vec~='txt']:not([data-vec-added])").index(dataVecPrev); // On récupère l'index du data-vec="txt" récupéré juste avant
 		// console.log(indexVecTxt);
 		indexVecTxt += 1; // On ajoute 1 à l'index, pour avoir l'index du data-vec="txt" à modifier
 		
