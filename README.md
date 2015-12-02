@@ -60,8 +60,8 @@ new VecCarousel(
 
 ## À savoir
 
-Il est déconseillé d'utiliser des balises <script> dans les pages WordPress. S'il doit y en avoir, il faut les mettre dans la div avec l'attribut data-vec="content" et les entourer d'une div avec une classe unique.
-Pas de problème avec les balises <style> (même si c'est toujours mieux d'éviter d'en mettre dans le HTML).
+Il est déconseillé d'utiliser des balises ```<script>``` dans les pages WordPress. S'il doit y en avoir, il faut les mettre dans la div avec l'attribut data-vec="content" et les entourer d'une div avec une classe unique.
+Pas de problème avec les balises ```<style>``` (même si c'est toujours mieux d'éviter d'en mettre dans le HTML).
 
 Pour l'utilisation de l'éditeur dans l'admin :
 Lancer l'éditeur visuel en cliquant sur le bouton 'Afficher' dans la zone du module 'Visual Editable Content';
