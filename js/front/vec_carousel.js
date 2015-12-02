@@ -23,6 +23,7 @@
 		else
 			this.isLooping = arguments["isLooping"];
 		this.timerDuration = arguments["timerDuration"] || 0;
+		this.sliderThreshold = arguments["threshold"] || 50;
 		
 		VecCarousel.allInstances.push(this);
 		
@@ -104,12 +105,12 @@
 	
 	VecCarousel.allInstances = new Array();
 	
-	var mobileResolution = 1023;
+	// var mobileResolution = 1023;
 	
 	var durationVecCarouselSlide = 600;
 	
 	var sliderTouchStartX = 0;
-	var sliderThreshold = 50;
+	// var sliderThreshold = 50;
 	
 	
 	// Permet d'attendre que les images du carousel soient chargée avant de l'afficher
@@ -262,7 +263,7 @@
 		var touches = evt.originalEvent.touches;
 		
 		var diff = sliderTouchStartX - touches[0].pageX;
-		if (Math.abs(diff) > sliderThreshold)
+		if (Math.abs(diff) > this.sliderThreshold)
 		{
 			if (diff < 0)
 				this.vecCarouselBeforeSlide("left");
