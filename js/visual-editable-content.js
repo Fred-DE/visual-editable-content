@@ -444,6 +444,33 @@ function cleanupContent(contentToCleanup)
 			jQuery(this).remove();
 	});
 	
+	// console.log(jQuery(contentToCleanup).find("[data-vec~='txt']:eq(0)").contents().length);
+	// console.log(jQuery(contentToCleanup).find("[data-vec~='txt']:eq(0)").contents().eq(0).text());
+	// console.log(jQuery(contentToCleanup).find("[data-vec~='txt']:eq(0)").contents().eq(1).text());
+	// console.log(jQuery(contentToCleanup).find("[data-vec~='txt']:eq(0)").contents().eq(2).text());
+	// console.log(jQuery(contentToCleanup).find("[data-vec~='txt']:eq(0)").contents().eq(3).text());
+	// console.log(jQuery(contentToCleanup).find("[data-vec~='txt']:eq(0)").contents().eq(4).text());
+	// console.log(jQuery(contentToCleanup).find("[data-vec~='txt']:eq(0)").contents().eq(5).text());
+	// console.log(jQuery(contentToCleanup).find("[data-vec~='txt']:eq(0)").contents().eq(6).text());
+	// console.log(jQuery(contentToCleanup).find("[data-vec~='txt']:eq(0)").find("br:first-child").index());
+	// console.log(jQuery(contentToCleanup).find("[data-vec~='txt']:eq(0)").find("br:last-child").index());
+	
+	
+	/*var arraySplitBr = jQuery(contentToCleanup).find("[data-vec~='txt']:eq(0)").html().split("<br>");
+	if (arraySplitBr[arraySplitBr.length-1] == "" && arraySplitBr[arraySplitBr.length-2] != "") // Si on a un 'br' à la fin, mais pas plus
+	{
+		jQuery(contentToCleanup).find("[data-vec~='txt']:eq(0) br:last-child").remove();
+	}*/
+	// console.log(arraySplit);
+	jQuery(contentToCleanup).find("[data-vec~='txt']").each(function()
+	{
+		var arraySplitBr = jQuery(this).html().split("<br>");
+		if (arraySplitBr[arraySplitBr.length-1] == "" && arraySplitBr[arraySplitBr.length-2] != "") // Si on a un 'br' à la fin, mais pas plus
+		{
+			jQuery(this).find("br:last-child").remove();
+		}
+	});
+	
 	return contentToCleanup;
 }
 
