@@ -92,6 +92,8 @@ L'attribut data-vec-transition contient le type d'animation à jouer. Les valeur
 * right-small
 * slide-top
 * opacity
+* width-right
+* width-left
 
 L'attribut data-vec-transition-delay="500" permet de lancer l'animation avec un décalage de la valeur renseignée (en millisecondes).
 Les attributs data-vec-transition-desktop="true" et data-vec-transition-mobile="true" permettent de spécifier si l'animation doit être jouée pour desktop et mobile
