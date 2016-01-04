@@ -364,7 +364,7 @@ function openLinksPopin()
 		event.stopPropagation();
 		event.stopImmediatePropagation();
 		
-		var linkAtts = wpLink.getAttrs(); // the links attributes (href, target) are stored in an object, which can be access via  wpLink.getAttrs()
+		var linkAtts = wpLink.getAttrs(); // the links attributes (href, target) are stored in an object, which can be access via wpLink.getAttrs()
 		
 		wpLink.textarea = jQuery("#visual-editable-content-editor"); // to close the link dialogue, it is again expecting an wp_editor instance, so you need to give it something to set focus back to. In this case, I'm using body, but the textfield with the URL would be fine
 		wpLink.close(); //close the dialogue
@@ -397,7 +397,7 @@ function openLinksPopin()
 	// On remplace les textes
 	jQuery(dataHtml).find("[data-vec-insert='after']").each(function(index)
 	{
-		// console.log("yo");
+		// console.log("test");
 	});
 	
 	return mainTextareaContent;

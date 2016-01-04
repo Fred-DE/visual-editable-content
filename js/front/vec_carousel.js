@@ -1,5 +1,5 @@
 /**
-	Script gérant les carousels.
+	Script gÃ©rant les carrousels.
 */
 
 (function($)
@@ -24,17 +24,231 @@
 			this.isLooping = arguments["isLooping"];
 		this.timerDuration = arguments["timerDuration"] || 0;
 		this.sliderThreshold = arguments["threshold"] || 50;
+		this.durationVecCarouselSlide = arguments["durationTransition"] || 600;
+		this.transition = arguments["transition"] || "slide";
 		
 		VecCarousel.allInstances.push(this);
 		
 		this.currentIndex = 0;
 		this.isAnimatingVecCarouselSlide = false;
 		
-		self.setVecCarousel();
-		
 		self.loadPictures();
 		
-		// Clic sur une flèche
+		// self.setVecCarousel();
+		
+		// self.loadPictures();
+		
+		// Si on veut faire slider le carousel avec un timer
+		if (self.timerDuration != 0)
+		{
+			this.timerInterval;
+			
+			self.timerManager();
+		}
+	};
+	
+	
+	
+	VecCarousel.allInstances = new Array();
+	
+	// var mobileResolution = 1023;
+	
+	// var durationVecCarouselSlide = 600;
+	
+	var sliderTouchStartX = 0;
+	// var sliderThreshold = 50;
+	
+	
+	// Permet d'attendre que les images du carousel soient chargÃ©e avant de l'afficher
+	VecCarousel.prototype.loadPictures = function()
+	{
+		var self = this;
+		
+		// $(self.vecCarousel).css({"visibility": "hidden"});
+		
+		var imagesCarousel = $(self.vecCarousel +" img");
+		var loadedImagesCount = 0;
+		
+		if (imagesCarousel.length > 0)
+		{
+			// imagesCarousel.load(function()
+			/*imagesCarousel.one("load", function()
+			{
+				loadedImagesCount++;
+				console.log("Image loaded");
+
+				if (loadedImagesCount == imagesCarousel.length)
+				{
+					console.log("if");
+					$(self.vecCarousel).css({"visibility": "visible"});
+					self.setVecCarousel();
+				}
+			}).each(function()
+			{
+				loadedImagesCount++;
+				if ($(this).complete)
+					console.log("Image each");
+
+				if (loadedImagesCount == imagesCarousel.length)
+				{
+					console.log("if each");
+					$(self.vecCarousel).css({"visibility": "visible"});
+					self.setVecCarousel();
+				}
+				
+			});*/
+			
+			var arrayImage = new Array();
+			imagesCarousel.each(function()
+			{
+				var imageCarousel = new Image();
+				imageCarousel.src = this.src;
+				
+				imageCarousel.addEventListener("load", function()
+				{
+					// console.log("loaded");
+					
+					loadedImagesCount++;
+					if (loadedImagesCount == imagesCarousel.length)
+					{
+						// console.log("if");
+						$(self.vecCarousel).css({"visibility": "visible"});
+						self.setVecCarousel();
+					}
+				});
+				
+				
+			});
+			/*imagesCarousel.addEventListener("load", function()
+			{
+				console.log("load");
+			});*/
+		}
+		else
+		{
+			$(self.vecCarousel).css({"visibility": "visible"});
+			self.setVecCarousel();
+		}
+	}
+	
+	
+	// MÃ©thode permettant d'initialiser le carousel
+	VecCarousel.prototype.setVecCarousel = function()
+	{
+		// console.log("setVecCarousel");
+		var self = this;
+		
+		// Si le carousel a dÃ©jÃ  Ã©tÃ© initialisÃ© mais que l'on change de rÃ©solution
+		if ($(self.vecCarousel).find(".data-vec-carousel-screen-content").length > 0)
+		{
+			var nbVecCarouselScreens = $(self.vecCarousel).find(".data-vec-carousel-screen-content").length;
+			// On rÃ©initialise les Ã©lÃ©ments du carousel sans les wrappers
+			for (var i = nbVecCarouselScreens - 1; i >= 0; i--)
+			{
+				$(self.vecCarousel).find("[data-vec-carousel-screen='"+ i +"'] [data-vec='carousel-item']:first-child").unwrap();
+				$(self.vecCarousel).find("[data-vec-carousel-screen='"+ i +"'] [data-vec='carousel-item']:first-child").unwrap();
+				
+				$(self.vecCarousel).find("[data-vec-item-blank]").remove();
+			}
+		}
+		
+		// On ajoute un attribut sur les items pour savoir sur quel Ã©cran du carousel ils seront (attribut temporaire)
+		var currentScreen = -1;
+		$(self.vecCarousel).find("[data-vec='carousel-item']").each(function(i)
+		{
+			if (i % self.nbItems == 0)
+				currentScreen++;
+			
+			$(this).attr("data-vec-carousel-screen-tmp", currentScreen);
+		});
+		
+		// On place les item du carousel dans un container qui servira d'Ã©cran, et on supprime l'aatribut temporaire crÃ©Ã© juste avant
+		for (var i = 0; i <= currentScreen; i++)
+		{
+			$(self.vecCarousel).find("[data-vec-carousel-screen-tmp='"+ i +"']").wrapAll('<div data-vec-carousel-screen="'+ i +'" /></div>');
+			var txtFillBlank = "";
+			
+			if (!self.fillWithBlank && i == currentScreen && $(self.vecCarousel).find("[data-vec='carousel-item']").length / (currentScreen+1) != self.nbItems || self.nbItems == 1)
+				txtFillBlank = 'no-blank';
+			
+			$(self.vecCarousel).find("[data-vec-carousel-screen-tmp='"+ i +"']").wrapAll('<div class="data-vec-carousel-screen-content '+ txtFillBlank +'"></div>');
+			$(self.vecCarousel).find("[data-vec-carousel-screen='"+ i +"'] [data-vec-carousel-screen-tmp='"+ i +"']").removeAttr("data-vec-carousel-screen-tmp");
+		}
+		
+		var maxHeightCarouselScreen = -1;
+		$(self.vecCarousel).find("div[data-vec-carousel-screen]").each(function()
+		{
+			if ($(this).height() > maxHeightCarouselScreen)
+				maxHeightCarouselScreen = $(this).height();
+		});
+		$(self.vecCarousel).find("div[data-vec~='carousel-container']").css({"height": maxHeightCarouselScreen +"px"});
+		$(self.vecCarousel).find("div[data-vec-carousel-screen]").css({"height": "100%"});
+		
+		$(self.vecCarousel).find("[data-vec='carousel-item']").after(" "); // Pour ajouter un espace entre les balises pour que le justify fonctionne
+		
+		// On rajoute des blocs pour combler les Ã©ventuels vides pour garder la mise en page justifiÃ©e
+		if (self.fillWithBlank)
+		{
+			$(self.vecCarousel).find(".data-vec-carousel-screen-content").each(function()
+			{
+				if ($(this).find("[data-vec='carousel-item']").length < self.nbItems)
+				{
+					var nbItemsToAdd = self.nbItems - $(this).find("[data-vec='carousel-item']").length;
+					// On doit vider les blancs
+					for (var i = 0; i < nbItemsToAdd; i++)
+					{
+						$(this).append('<div data-vec="carousel-item" data-vec-item-blank></div>');
+					}
+				}
+			});
+		}
+		
+		
+		// FlÃ¨ches
+		if (self.hasArrows && $(self.vecCarousel).find(".data-vec-carousel-screen-content").length > 1)
+		{
+			$(self.vecCarousel).find(".vec-carousel-slide-button").css({"display": "inline-block"});
+		}
+		else
+		{
+			$(self.vecCarousel).find(".vec-carousel-slide-button").css({"display": "none"});
+		}
+		
+		// Navigation
+		if (self.hasNavigation)
+		{
+			$(self.vecCarousel).find("[data-vec='carousel-nav']").css({"display": "block"}).empty();
+			// $(self.vecCarousel).find("div[data-vec='carousel-nav']").empty();
+			
+			if ($(self.vecCarousel).find("div[data-vec-carousel-screen]").length > 1) // Si on a plusieurs Ã©crans
+			{
+				var vecCarouselNavButton = '<div class="vec-carousel-nav-button"><div class="shape"></div></div>';
+				
+				// On ajoute autant de boutons que d'Ã©crans
+				for (var i = 0; i < $(self.vecCarousel).find("div[data-vec-carousel-screen]").length; i++)
+				{
+					$(self.vecCarousel).find("div[data-vec='carousel-nav']").append(vecCarouselNavButton);
+				}
+				
+				$(self.vecCarousel).find("div[data-vec='carousel-nav'] .vec-carousel-nav-button:first-child").addClass("active");
+			}
+		}
+		else
+		{
+			$(self.vecCarousel).find("[data-vec='carousel-nav']").css({"display": "none"});
+		}
+		
+		self.initEvents();
+		
+		self.vecCarouselAfterSlide();
+	};
+	
+	
+	VecCarousel.prototype.initEvents = function()
+	{
+		var self = this;
+		
+		// Clic sur une flÃ¨che
 		$(self.vecCarousel).off("click", ".vec-carousel-slide-button");
 		$(self.vecCarousel).on("click", ".vec-carousel-slide-button", function()
 		{
@@ -71,11 +285,11 @@
 		$(self.vecCarousel).off("click", ".vec-carousel-nav-button:not(.active)");
 		$(self.vecCarousel).on("click", ".vec-carousel-nav-button:not(.active)", function()
 		{
-			self.vecCarouselSlide($(this).index());
+			self.vecCarouselSlide($(this).index(), false);
 		});
 		
 		
-		// On glisse le doigt sur mobile (si on a plusieurs écrans)
+		// On glisse le doigt sur mobile (si on a plusieurs Ã©crans)
 		if ($(self.vecCarousel).find(".data-vec-carousel-screen-content").length > 1)
 		{
 			$(self.vecCarousel).off("touchstart");
@@ -91,162 +305,6 @@
 					self.vecCarouselTouchMove(event);
 			});
 		}
-		
-		// Si on veut faire slider le carousel avec un timer
-		if (self.timerDuration != 0)
-		{
-			this.timerInterval;
-			
-			self.timerManager();
-		}
-	};
-	
-	
-	
-	VecCarousel.allInstances = new Array();
-	
-	// var mobileResolution = 1023;
-	
-	var durationVecCarouselSlide = 600;
-	
-	var sliderTouchStartX = 0;
-	// var sliderThreshold = 50;
-	
-	
-	// Permet d'attendre que les images du carousel soient chargée avant de l'afficher
-	VecCarousel.prototype.loadPictures = function()
-	{
-		var self = this;
-		
-		// $(self.vecCarousel).css({"visibility": "hidden"});
-		
-		var imagesCarousel = $(self.vecCarousel +" img");
-		var loadedImagesCount = 0;
-
-		imagesCarousel.load(function()
-		{
-			loadedImagesCount++;
-
-			if (loadedImagesCount == imagesCarousel.length)
-				$(self.vecCarousel).css({"visibility": "visible"});
-			
-		}).each(function()
-		{
-			loadedImagesCount++;
-
-			if (loadedImagesCount == imagesCarousel.length)
-				$(self.vecCarousel).css({"visibility": "visible"});
-			
-		});
-	}
-	
-	
-	// Méthode permettant d'initialiser le carousel
-	VecCarousel.prototype.setVecCarousel = function()
-	{
-		var self = this;
-		
-		// Si le carousel a déjà été initialisé mais que l'on change de résolution
-		if ($(self.vecCarousel).find(".data-vec-carousel-screen-content").length > 0)
-		{
-			var nbVecCarouselScreens = $(self.vecCarousel).find(".data-vec-carousel-screen-content").length;
-			// On réinitialise les éléments du carousel sans les wrappers
-			for (var i = nbVecCarouselScreens - 1; i >= 0; i--)
-			{
-				$(self.vecCarousel).find("[data-vec-carousel-screen='"+ i +"'] [data-vec='carousel-item']:first-child").unwrap();
-				$(self.vecCarousel).find("[data-vec-carousel-screen='"+ i +"'] [data-vec='carousel-item']:first-child").unwrap();
-				
-				$(self.vecCarousel).find("[data-vec-item-blank]").remove();
-			}
-		}
-		
-		// On ajoute un attribut sur les items pour savoir sur quel écran du carousel ils seront (attribut temporaire)
-		var currentScreen = -1;
-		$(self.vecCarousel).find("[data-vec='carousel-item']").each(function(i)
-		{
-			if (i % self.nbItems == 0)
-				currentScreen++;
-			
-			$(this).attr("data-vec-carousel-screen-tmp", currentScreen);
-		});
-		
-		// On place les item du carousel dans un container qui servira d'écran, et on supprime l'aatribut temporaire créé juste avant
-		for (var i = 0; i <= currentScreen; i++)
-		{
-			$(self.vecCarousel).find("[data-vec-carousel-screen-tmp='"+ i +"']").wrapAll('<div data-vec-carousel-screen="'+ i +'" /></div>');
-			var txtFillBlank = "";
-			
-			if (!self.fillWithBlank && i == currentScreen && $(self.vecCarousel).find("[data-vec='carousel-item']").length / (currentScreen+1) != self.nbItems || self.nbItems == 1)
-				txtFillBlank = 'no-blank';
-			
-			$(self.vecCarousel).find("[data-vec-carousel-screen-tmp='"+ i +"']").wrapAll('<div class="data-vec-carousel-screen-content '+ txtFillBlank +'"></div>');
-			$(self.vecCarousel).find("[data-vec-carousel-screen='"+ i +"'] [data-vec-carousel-screen-tmp='"+ i +"']").removeAttr("data-vec-carousel-screen-tmp");
-		}
-		
-		var maxHeightCarouselScreen = -1;
-		$(self.vecCarousel).find("div[data-vec-carousel-screen]").each(function()
-		{
-			if ($(this).height() > maxHeightCarouselScreen)
-				maxHeightCarouselScreen = $(this).height();
-		});
-		$(self.vecCarousel).find("div[data-vec~='carousel-container']").css({"height": maxHeightCarouselScreen +"px"});
-		$(self.vecCarousel).find("div[data-vec-carousel-screen]").css({"height": "100%"});
-		
-		$(self.vecCarousel).find("[data-vec='carousel-item']").after(" "); // Pour ajouter un espace entre les balises pour que le justify fonctionne
-		
-		// On rajoute des blocs pour combler les éventuels vides pour garder la mise en page justifiée
-		if (self.fillWithBlank)
-		{
-			$(self.vecCarousel).find(".data-vec-carousel-screen-content").each(function()
-			{
-				if ($(this).find("[data-vec='carousel-item']").length < self.nbItems)
-				{
-					var nbItemsToAdd = self.nbItems - $(this).find("[data-vec='carousel-item']").length;
-					// On doit vider les blancs
-					for (var i = 0; i < nbItemsToAdd; i++)
-					{
-						$(this).append('<div data-vec="carousel-item" data-vec-item-blank></div>');
-					}
-				}
-			});
-		}
-		
-		
-		// Flèches
-		if (self.hasArrows && $(self.vecCarousel).find(".data-vec-carousel-screen-content").length > 1)
-		{
-			$(self.vecCarousel).find(".vec-carousel-slide-button").css({"display": "inline-block"});
-		}
-		else
-		{
-			$(self.vecCarousel).find(".vec-carousel-slide-button").css({"display": "none"});
-		}
-		
-		// Navigation
-		if (self.hasNavigation)
-		{
-			$(self.vecCarousel).find("[data-vec='carousel-nav']").css({"display": "block"}).empty();
-			// $(self.vecCarousel).find("div[data-vec='carousel-nav']").empty();
-			
-			if ($(self.vecCarousel).find("div[data-vec-carousel-screen]").length > 1) // Si on a plusieurs écrans
-			{
-				var vecCarouselNavButton = '<div class="vec-carousel-nav-button"><div class="shape"></div></div>';
-				
-				// On ajoute autant de boutons que d'écrans
-				for (var i = 0; i < $(self.vecCarousel).find("div[data-vec-carousel-screen]").length; i++)
-				{
-					$(self.vecCarousel).find("div[data-vec='carousel-nav']").append(vecCarouselNavButton);
-				}
-				
-				$(self.vecCarousel).find("div[data-vec='carousel-nav'] .vec-carousel-nav-button:first-child").addClass("active");
-			}
-		}
-		else
-		{
-			$(self.vecCarousel).find("[data-vec='carousel-nav']").css({"display": "none"});
-		}
-		
-		self.vecCarouselAfterSlide();
 	};
 	
 	
@@ -330,54 +388,86 @@
 	};
 	
 	
-	// Méthode permettant de slider jusqu'à l'écran dont l'indice est passé en paramètre
-	VecCarousel.prototype.vecCarouselSlide = function(index, loop)
+	// MÃ©thode permettant de slider jusqu'Ã  l'Ã©cran dont l'indice est passÃ© en paramÃ¨tre
+	VecCarousel.prototype.vecCarouselSlide = function(index, loop, durationAnimation)
 	{
 		var self = this;
 		
-		if (typeof(loop) == "undefined")
-			loop = false;
-
-		if (!self.isAnimatingVecCarouselSlide)
+		if (index != self.currentIndex)
 		{
-			self.isAnimatingVecCarouselSlide = true;
+			var durationSlide = self.durationVecCarouselSlide;
 			
-			// On récupère l'écran courant
-			/*var currentIndex = $(self.vecCarousel).find("div[data-vec='carousel-nav'] .vec-carousel-nav-button.active").index();
-			var direction = 1;
-			if (index < currentIndex)
-				direction = -1;*/
-			
-			var direction = 1;
-			if (index < self.currentIndex)
-				direction = -1;
-			
-			if (loop)
-				direction *= -1;
-			
-			// On met à jour la navigation
-			$(self.vecCarousel).find("div[data-vec='carousel-nav'] .vec-carousel-nav-button").removeClass("active");
-			$(self.vecCarousel).find("div[data-vec='carousel-nav'] .vec-carousel-nav-button:eq("+ index +")").addClass("active");
-			
-			$(self.vecCarousel).find("[data-vec-carousel-screen='"+ index +"']").css({"left": (100 * direction) +"%"}); // On place l'écran à afficher sur un bord de l'écran (gauche ou droite, selon la direction du slide)
-			
-			$(self.vecCarousel).find("[data-vec-carousel-screen='"+ index +"']").animate({"left": "0px"}, {duration: durationVecCarouselSlide, easing: "linear", complete: function()
+			if (typeof(loop) == "undefined")
+				loop = false;
+			if (typeof(durationAnimation) != "undefined")
+				durationSlide = durationAnimation;
+
+			if (!self.isAnimatingVecCarouselSlide)
 			{
-				self.isAnimatingVecCarouselSlide = false;
-				self.currentIndex = index;
+				self.isAnimatingVecCarouselSlide = true;
 				
-				self.vecCarouselAfterSlide();
+				// On rÃ©cupÃ¨re l'Ã©cran courant
+				/*var currentIndex = $(self.vecCarousel).find("div[data-vec='carousel-nav'] .vec-carousel-nav-button.active").index();
+				var direction = 1;
+				if (index < currentIndex)
+					direction = -1;*/
 				
-				if (self.timerDuration != 0) // Si on a un timer, on le reset
+				var direction = 1;
+				if (index < self.currentIndex)
+					direction = -1;
+				
+				if (loop)
+					direction *= -1;
+				
+				// On met Ã  jour la navigation
+				$(self.vecCarousel).find("div[data-vec='carousel-nav'] .vec-carousel-nav-button").removeClass("active");
+				$(self.vecCarousel).find("div[data-vec='carousel-nav'] .vec-carousel-nav-button:eq("+ index +")").addClass("active");
+				
+				if (self.transition == "fade")
 				{
-					clearInterval(self.timerInterval);
-					self.timerManager();
+					$(self.vecCarousel).find("[data-vec-carousel-screen='"+ index +"']").css({"left": "0%", "opacity": "0", "z-index": "2"}); // On place l'Ã©cran Ã  afficher sous l'Ã©lÃ©ment courant
+					
+					$(self.vecCarousel).find("[data-vec-carousel-screen='"+ index +"']").animate({"opacity": "1"}, {duration: durationSlide, easing: "linear", complete: function()
+					{
+						self.isAnimatingVecCarouselSlide = false;
+						self.currentIndex = index;
+						
+						self.vecCarouselAfterSlide();
+						
+						if (self.timerDuration != 0) // Si on a un timer, on le reset
+						{
+							clearInterval(self.timerInterval);
+							self.timerManager();
+						}
+					}});
+					
+					$(self.vecCarousel).find("[data-vec-carousel-screen='"+ self.currentIndex +"']").css({"z-index": "1"});
+					$(self.vecCarousel).find("[data-vec-carousel-screen='"+ self.currentIndex +"']").animate({"opacity": "0"}, {duration: durationSlide, easing: "linear"});
 				}
-			}});
-			
-			$(self.vecCarousel).find("[data-vec-carousel-screen='"+ self.currentIndex +"']").animate({"left": -(100 * direction) +"%"}, {duration: durationVecCarouselSlide, easing: "linear"});
+				else
+				{
+					$(self.vecCarousel).find("[data-vec-carousel-screen='"+ index +"']").css({"left": (100 * direction) +"%"}); // On place l'Ã©cran Ã  afficher sur un bord de l'Ã©cran (gauche ou droite, selon la direction du slide)
+					
+					$(self.vecCarousel).find("[data-vec-carousel-screen='"+ index +"']").animate({"left": "0px"}, {duration: durationSlide, easing: "linear", complete: function()
+					{
+						self.isAnimatingVecCarouselSlide = false;
+						self.currentIndex = index;
+						
+						self.vecCarouselAfterSlide();
+						
+						if (self.timerDuration != 0) // Si on a un timer, on le reset
+						{
+							clearInterval(self.timerInterval);
+							self.timerManager();
+						}
+					}});
+					
+					$(self.vecCarousel).find("[data-vec-carousel-screen='"+ self.currentIndex +"']").animate({"left": -(100 * direction) +"%"}, {duration: durationSlide, easing: "linear"});
+				}
+			}
 		}
 	};
+	
 	
 	VecCarousel.prototype.vecCarouselAfterSlide = function()
 	{
@@ -430,7 +520,7 @@
 	};
 	
 	
-	// Méthode statique permettant de retourner l'instance du VecCarousel qui appartient au carousel dont l'ID est passé en paramètre.
+	// MÃ©thode statique permettant de retourner l'instance du VecCarousel qui appartient au carousel dont l'ID est passÃ© en paramÃ¨tre.
 	VecCarousel.getInstanceById = function(idElement)
 	{
 		var idElementToCompare = "#"+ idElement;
@@ -443,5 +533,16 @@
 				break;
 			}
 		}
-	}
+	};
+	
+	
+	// MÃ©thode permettant de positionner le carousel sur un certain Ã©cran, dont l'index est passÃ© en paramÃ¨tre (commence Ã  0).
+	VecCarousel.prototype.setScreen = function(index)
+	{
+		var self = this;
+		
+		self.vecCarouselSlide(index, false, 1);
+		
+		self.currentIndex = index;
+	};
 })(jQuery);

@@ -248,7 +248,7 @@ var setVecLink;
 		
 		
 		// On détecte la création d'une balise
-		var targetObserver = document.querySelector("#editor");
+		var targetObserver = document.querySelector("#editor-vec");
 		var observer = new MutationObserver(function(mutations)
 		{
 			mutations.forEach(function(mutation)
@@ -271,7 +271,7 @@ var setVecLink;
 						}
 					}
 				}
-			});    
+			});
 		});
 		var config =
 		{

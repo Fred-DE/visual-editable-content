@@ -2,23 +2,23 @@
 
 https://github.com/Fred-DE/visual-editable-content
 
-Module WordPress permettant une édition visuelle de ses pages.
+Module WordPress permettant une Ã©dition visuelle de ses pages.
 
 
-Si vous êtes tombés ici par hasard, sachez que ce module a été créé pour un besoin personnel. Il nécessite certaines connaissances pour le faire fonctionner correctement.
-Cependant libre à vous de l'utiliser si vous le voulez.
+Si vous Ãªtes tombÃ©s ici par hasard, sachez que ce module a Ã©tÃ© crÃ©Ã© pour un besoin personnel. Il nÃ©cessite certaines connaissances pour le faire fonctionner correctement.
+Cependant libre Ã  vous de l'utiliser si vous le voulez.
 
 
 
 ## Instructions
 
-Le contenu HTML qui doit être éditable a besoin d'être entouré par une div contenant l'attribut data-vec="content".
+Le contenu HTML qui doit Ãªtre Ã©ditable a besoin d'Ãªtre entourÃ© par une div contenant l'attribut data-vec="content".
 
-Les éléments de texte devant être éditable doivent contenir l'attribut data-vec="txt".
+Les Ã©lÃ©ments de texte devant Ãªtre Ã©ditable doivent contenir l'attribut data-vec="txt".
 
 Les images data-vec="pic".
 
-Un Carrousel doit être construit avec cette forme :
+Un Carrousel doit Ãªtre construit avec cette forme :
 
 ```
 <div id="id-carrousel">
@@ -38,45 +38,49 @@ Un Carrousel doit être construit avec cette forme :
 </div>
 ```
 
-La div avec data-vec="carousel-container" est le carrousel en lui-même. C'est lui qui contient les éléments qui le composent. Chaque élément doit avoir l'attribut data-vec="carousel-item".
-Si l'on souhaite ajouter des flèches pour faire tourner le carrousel, il faut ajouter des éléments avec les attributs data-vec="carousel-left-button" et data-vec="carousel-right-button".
-Si l'on souhaite ajouter une navigation (boutons correspondant chacun à un écran du carrousel), il faut ajouter un élément avec l'attribut data-vec="carousel-nav".
-Tous les éléments constituant le carrousel doivent être entourés par une div avec un id.
+La div avec data-vec="carousel-container" est le carrousel en lui-mÃªme. C'est lui qui contient les Ã©lÃ©ments qui le composent. Lui ajouter la valeur "no-edit" pour le rendre non Ã©ditable
+(utile lorsque le contenu et gÃ©nÃ©rÃ© dynamiquement).
+Chaque Ã©lÃ©ment doit avoir l'attribut data-vec="carousel-item".
+Si l'on souhaite ajouter des flÃ¨ches pour faire tourner le carrousel, il faut ajouter des Ã©lÃ©ments avec les attributs data-vec="carousel-left-button" et data-vec="carousel-right-button".
+Si l'on souhaite ajouter une navigation (boutons correspondant chacun Ã  un Ã©cran du carrousel), il faut ajouter un Ã©lÃ©ment avec l'attribut data-vec="carousel-nav".
+Tous les Ã©lÃ©ments constituant le carrousel doivent Ãªtre entourÃ©s par une div avec un id.
 
 L'initialisation du carrousel se fait en instanciant une classe VecCarousel. Exemple :
 ```javascript
 new VecCarousel(
 {
-	vecCarousel: "#id-carrousel", // id de la div contenant les éléments du carousel
-	nbItems: 3, // Nombre d'éléments par écran
-	fillWithBlank: false, // Remplir les blancs du dernier écran (s'il y en a) par des items vides (utile notamment lorsque les éléments d'un écran sont justifiés)
-	hasArrows: false, // Si on active les flèches
+	vecCarousel: "#id-carrousel", // id de la div contenant les Ã©lÃ©ments du carousel
+	nbItems: 3, // Nombre d'Ã©lÃ©ments par Ã©cran
+	fillWithBlank: false, // Remplir les blancs du dernier Ã©cran (s'il y en a) par des items vides (utile notamment lorsque les Ã©lÃ©ments d'un Ã©cran sont justifiÃ©s)
+	hasArrows: false, // Si on active les flÃ¨ches
 	hasNavigation: true, // Si on active les boutons de navigation
-	isLooping: true, // Si on souhaite que le carrousel puisse boucler (mettre à true seulement si on ne met pas de timer)
-	timerDuration: 8000, // Durée du slide automatique, en millisecondes (mettre 0 ou ne pas renseigner pour qu'il n'y ait pas de slide automatique)
-	threshold: 100 // Distance en pixels que l'on doit parcourir au touch sur surface tactile pour déclencher un slide (50 par défaut)
+	isLooping: true, // Si on souhaite que le carrousel puisse boucler (mettre Ã  true seulement si on ne met pas de timer)
+	timerDuration: 8000, // DurÃ©e du slide automatique, en millisecondes (mettre 0 ou ne pas renseigner pour qu'il n'y ait pas de slide automatique)
+	threshold: 100 // Distance en pixels que l'on doit parcourir au touch sur surface tactile pour dÃ©clencher un slide (50 par dÃ©faut)
+	transition: "slide", // Type de transition (slide ou fade)
+	durationTransition: 500 // DurÃ©e (en millisecondes) de la durÃ©e de la transition
 });
 ```
 
-## À savoir
+## Ã€ savoir
 
-Il est déconseillé d'utiliser des balises ```<script>``` dans les pages WordPress. S'il doit y en avoir, il faut les mettre dans la div avec l'attribut data-vec="content" et les entourer d'une div avec une classe unique.
-Pas de problème avec les balises ```<style>``` (même si c'est toujours mieux d'éviter d'en mettre dans le HTML).
+Il est dÃ©conseillÃ© d'utiliser des balises ```<script>``` dans les pages WordPress. S'il doit y en avoir, il faut les mettre dans la div avec l'attribut data-vec="content" et les entourer d'une div avec une classe unique.
+Pas de problÃ¨me avec les balises ```<style>``` (mÃªme si c'est toujours mieux d'Ã©viter d'en mettre dans le HTML).
 
-Pour l'utilisation de l'éditeur dans l'admin :
-Lancer l'éditeur visuel en cliquant sur le bouton 'Afficher' dans la zone du module 'Visual Editable Content';
-Il ne faut faire de modifications dans la zone d'édition de WordPress ni avant, ni pendant que l'on utilise l'éditeur visuel pour ne pas créer de conflits.
-Lorsque l'on enregistre les modifications faites dans l'éditeur visuel, ce dernier se ferme pour empêcher que l'on fasse de nouvelles modifications à l'intérieur
-(possibilité d'erreurs dues à la création d'attributs temporaires).
-Enregister ses modifications depuis l'éditeur visuel ne fait que mettre à jour le code dans la zone d'édition (le textarea) de d'admin de WordPress. Penser à mettre à jour la page
-avec le bouton 'Mettre à jour' de WordPress, pour enregistrer les modifications.
+Pour l'utilisation de l'Ã©diteur dans l'admin :
+Lancer l'Ã©diteur visuel en cliquant sur le bouton 'Afficher' dans la zone du module 'Visual Editable Content';
+Il ne faut faire de modifications dans la zone d'Ã©dition de WordPress ni avant, ni pendant que l'on utilise l'Ã©diteur visuel pour ne pas crÃ©er de conflits.
+Lorsque l'on enregistre les modifications faites dans l'Ã©diteur visuel, ce dernier se ferme pour empÃªcher que l'on fasse de nouvelles modifications Ã  l'intÃ©rieur
+(possibilitÃ© d'erreurs dues Ã  la crÃ©ation d'attributs temporaires).
+Enregister ses modifications depuis l'Ã©diteur visuel ne fait que mettre Ã  jour le code dans la zone d'Ã©dition (le textarea) de d'admin de WordPress. Penser Ã  mettre Ã  jour la page
+avec le bouton 'Mettre Ã  jour' de WordPress, pour enregistrer les modifications.
 
 
 ## Transitions
 
-Il s'agit d'animer un bloc HTML lorsque l'on scroll à son niveau.
-Ajouter l'attribut data-vec="transition" sur l'élément à animer.
-L'attribut data-vec-transition contient le type d'animation à jouer. Les valeurs possibles sont :
+Il s'agit d'animer un bloc HTML lorsque l'on scroll Ã  son niveau.
+Ajouter l'attribut data-vec="transition" sur l'Ã©lÃ©ment Ã  animer.
+L'attribut data-vec-transition contient le type d'animation Ã  jouer. Les valeurs possibles sont :
 
 * top
 * bottom
@@ -89,8 +93,8 @@ L'attribut data-vec-transition contient le type d'animation à jouer. Les valeurs
 * slide-top
 * opacity
 
-L'attribut data-vec-transition-delay="500" permet de lancer l'animation avec un décalage de la valeur renseignée (en millisecondes).
-Les attributs data-vec-transition-desktop="true" et data-vec-transition-mobile="true" permettent de spécifier si l'animation doit être jouée pour desktop et mobile
-(le seuil entre desktop et mobile est une résolution de 1023px de large).
+L'attribut data-vec-transition-delay="500" permet de lancer l'animation avec un dÃ©calage de la valeur renseignÃ©e (en millisecondes).
+Les attributs data-vec-transition-desktop="true" et data-vec-transition-mobile="true" permettent de spÃ©cifier si l'animation doit Ãªtre jouÃ©e pour desktop et mobile
+(le seuil entre desktop et mobile est une rÃ©solution de 1023px de large).
 
-Ajouter l'attribut data-vec-transition-reset="true" pour rejouer l'animation si l'on scroll à nouveau au niveau du bloc (vers le bas).
+Ajouter l'attribut data-vec-transition-reset="true" pour rejouer l'animation si l'on scroll Ã  nouveau au niveau du bloc (vers le bas).
