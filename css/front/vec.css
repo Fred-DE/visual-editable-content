@@ -178,6 +178,11 @@ span.font-size-50 {font-size: 50px;}
 	[data-vec~="transition"][data-vec-transition~="width-left"][data-vec-transition-desktop="true"] {right: 0px; width: 0px; -webkit-transition: all 0.8s ease 0s; transition: all 0.8s ease 0s;}
 	[data-vec~="transition"][data-vec-transition~="width-right"][data-vec-transition-desktop="true"].transition,
 	[data-vec~="transition"][data-vec-transition~="width-left"][data-vec-transition-desktop="true"].transition {width: 100%;}
+	/* height */
+	[data-vec~="transition"][data-vec-transition~="height-bottom"][data-vec-transition-desktop="true"] {top: 0px; height: 0px; -webkit-transition: all 0.8s ease 0s; transition: all 0.8s ease 0s;}
+	[data-vec~="transition"][data-vec-transition~="height-top"][data-vec-transition-desktop="true"] {bottom: 0px; height: 0px; -webkit-transition: all 0.8s ease 0s; transition: all 0.8s ease 0s;}
+	[data-vec~="transition"][data-vec-transition~="height-bottom"][data-vec-transition-desktop="true"].transition,
+	[data-vec~="transition"][data-vec-transition~="height-top"][data-vec-transition-desktop="true"].transition {height: 100%;}
 	
 	
 	/*[data-vec~="transition"][data-vec-transition~="border-bottom-left-to-right"][data-vec-transition-desktop="true"]:after {-webkit-transition: all 0.8s ease 0s; transition: all 0.8s ease 0s;}
@@ -224,6 +229,11 @@ span.font-size-50 {font-size: 50px;}
 	[data-vec~="transition"][data-vec-transition~="width-left"][data-vec-transition-mobile="true"] {right: 0px; width: 0px; -webkit-transition: all 0.8s ease 0s; transition: all 0.8s ease 0s;}
 	[data-vec~="transition"][data-vec-transition~="width-right"][data-vec-transition-mobile="true"].transition,
 	[data-vec~="transition"][data-vec-transition~="width-left"][data-vec-transition-mobile="true"].transition {width: 100%;}
+	/* height */
+	[data-vec~="transition"][data-vec-transition~="height-bottom"][data-vec-transition-mobile="true"] {top: 0px; height: 0px; -webkit-transition: all 0.8s ease 0s; transition: all 0.8s ease 0s;}
+	[data-vec~="transition"][data-vec-transition~="height-top"][data-vec-transition-mobile="true"] {bottom: 0px; height: 0px; -webkit-transition: all 0.8s ease 0s; transition: all 0.8s ease 0s;}
+	[data-vec~="transition"][data-vec-transition~="height-bottom"][data-vec-transition-mobile="true"].transition,
+	[data-vec~="transition"][data-vec-transition~="height-top"][data-vec-transition-mobile="true"].transition {height: 100%;}
 	
 	
 	.only-desktop {display: none !important;}
