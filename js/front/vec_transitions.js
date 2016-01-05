@@ -46,7 +46,7 @@
 		
 		// Événement sur le scroll
 		checkVecTransition();
-		$(window).off("scroll");
+		// $(window).off("scroll");
 		$(window).on("scroll", function()
 		{
 			checkVecTransition();
