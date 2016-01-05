@@ -7,12 +7,26 @@
 	$(window).load(function()
 	{
 		initVecTransitions();
+		$(window).resize(function()
+		{
+			if ($(window).width() > mobileResolution && (currentResolutionTransition == "" || currentResolutionTransition != "desktop"))
+			{
+				currentResolutionTransition = "desktop";
+				initVecTransitions();
+			}
+			else if ($(window).width() <= mobileResolution && (currentResolutionTransition == "" || currentResolutionTransition != "mobile"))
+			{
+				currentResolutionTransition = "mobile";
+				initVecTransitions();
+			}
+		});
 	});
 	
 	
 	var attrVecTransition = "[data-vec~='transition']";
 	
 	var mobileDEResolution = 1023;
+	var currentResolutionTransition = "";
 	
 	function initVecTransitions()
 	{
@@ -32,6 +46,7 @@
 		
 		// Événement sur le scroll
 		checkVecTransition();
+		$(window).off("scroll");
 		$(window).on("scroll", function()
 		{
 			checkVecTransition();
@@ -50,6 +65,7 @@
 		
 		var transitionPlatform = vecCheckResolution();
 		
+		// $(attrVecTransition + transitionPlatform +":not(.transition):not([data-vec-transition-direct='true'])").each(function()
 		$(attrVecTransition + transitionPlatform +":not(.transition):not([data-vec-transition-direct='true'])").each(function()
 		{
 			// var offsetForTopComingTop = $(window).height() / 2.3;
@@ -115,7 +131,7 @@
 	// Fonction permettant de réinitialiser les animations que l'on autorise à se rejouer si elles se retrouvent à nouveau sous le scroll
 	function checkVecReset()
 	{
-	$(attrVecTransition +".transition[data-vec-transition-reset='true']:not([data-vec-transition-direct='true'])").each(function()
+		$(attrVecTransition +".transition[data-vec-transition-reset='true']:not([data-vec-transition-direct='true'])").each(function()
 		{
 			if (($(this).offset().top > $(window).scrollTop() + $(window).height() + 50))
 			{
