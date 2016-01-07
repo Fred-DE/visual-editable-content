@@ -388,8 +388,8 @@ var setVecLink;
 		
 		$("#visual-editable-content-overlay, #visual-editable-content-txt-editor").addClass("open");
 		$("#visual-editable-content-txt-editor").css({"top": visualEditableContentPopinTop +"px"});
+		$("#visual-editable-content-txt-editor .editor").html($(element).html() +"<br>");
 		
-		$("#visual-editable-content-txt-editor .editor").html($(element).html());
 		
 		// On remplace les span par les balises de styles du navigateur
 		for (var i = 0; i < tagsAssociation.length; i++)
@@ -493,16 +493,29 @@ var setVecLink;
 				$(element).after(newElement);
 				$(element).remove();
 			}
+			
+			// On remplace les div et les p par des br
+			$(element).find("div").append("<br>");
+			$(element).find("div").contents().unwrap();
+			
+			$(element).find("p").append("<br>");
+			$(element).find("p").contents().unwrap();
 		});
 		
-		// $("#visual-editable-content-txt-editor .editor").off("paste");
-		$("#visual-editable-content-txt-editor .editor").one("paste", function(event)
+		$("#visual-editable-content-txt-editor .editor").off("paste");
+		$("#visual-editable-content-txt-editor .editor").on("paste", function(event)
 		{
 			event.preventDefault();
 			
 			var textPaste = (event.originalEvent.clipboardData || window.clipboardData).getData("text");
 			
 			document.execCommand("insertText", false, textPaste);
+			
+			$(this).find("div").append("<br>");
+			$(this).find("div").contents().unwrap();
+			
+			$(this).find("p").append("<br>");
+			$(this).find("p").contents().unwrap();
 		});
 	}
 	
