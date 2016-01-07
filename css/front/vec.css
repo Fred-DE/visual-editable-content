@@ -169,7 +169,7 @@ span.font-size-50 {font-size: 50px;}
 
 
 	/* opacity */
-	[data-vec~="transition"][data-vec-transition~="opacity"][data-vec-transition-desktop="true"] {opacity: 0; -webkit-transition: all 0.8s ease 0s; transition: all 0.8s ease 0s;}
+	[data-vec~="transition"][data-vec-transition~="opacity"][data-vec-transition-desktop="true"] {opacity: 0; -webkit-transition: opacity 0.8s ease 0s; transition: opacity 0.8s ease 0s;}
 	[data-vec~="transition"][data-vec-transition~="opacity"][data-vec-transition-desktop="true"].transition {opacity: 1;}
 	
 	
@@ -220,7 +220,7 @@ span.font-size-50 {font-size: 50px;}
 
 
 	/* opacity */
-	[data-vec~="transition"][data-vec-transition~="opacity"][data-vec-transition-mobile="true"] {opacity: 0; -webkit-transition: all 0.8s ease 0s; transition: all 0.8s ease 0s;}
+	[data-vec~="transition"][data-vec-transition~="opacity"][data-vec-transition-mobile="true"] {opacity: 0; -webkit-transition: opacity 0.8s ease 0s; transition: opacity 0.8s ease 0s;}
 	[data-vec~="transition"][data-vec-transition~="opacity"][data-vec-transition-mobile="true"].transition {opacity: 1;}
 	
 	

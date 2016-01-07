@@ -100,5 +100,6 @@ L'attribut data-vec-transition contient le type d'animation à jouer. Les valeur
 L'attribut data-vec-transition-delay="500" permet de lancer l'animation avec un décalage de la valeur renseignée (en millisecondes).
 Les attributs data-vec-transition-desktop="true" et data-vec-transition-mobile="true" permettent de spécifier si l'animation doit être jouée pour desktop et mobile
 (le seuil entre desktop et mobile est une résolution de 1023px de large).
-Ajouter l'attribut  data-vec-transition-direct="true" pour jouer l'animation directement à l'ouverture de la page.
+Ajouter l'attribut data-vec-transition-direct="true" pour jouer l'animation directement à l'ouverture de la page.
 Ajouter l'attribut data-vec-transition-reset="true" pour rejouer l'animation si l'on scroll à nouveau au niveau du bloc (vers le bas).
+Pour lier un élément à un autre, c'est-à-dire faire en sorte que l'animation d'un élément se déclenche non pas grâce à la position du scroll mais lorsque l'animation d'une autre élément se lance, mettre sur l'élément déclencheur l'attribut data-vec-transition-rel-trigger="nom-relation-transition" et sur l'élement à lier data-vec-transition-rel="nom-relation-transition" avec pour les 2 la même valeur.
