@@ -9,12 +9,12 @@
 		initVecTransitions();
 		$(window).resize(function()
 		{
-			if ($(window).width() > mobileResolution && (currentResolutionTransition == "" || currentResolutionTransition != "desktop"))
+			if ($(window).width() > mobileVecResolution && (currentResolutionTransition == "" || currentResolutionTransition != "desktop"))
 			{
 				currentResolutionTransition = "desktop";
 				initVecTransitions();
 			}
-			else if ($(window).width() <= mobileResolution && (currentResolutionTransition == "" || currentResolutionTransition != "mobile"))
+			else if ($(window).width() <= mobileVecResolution && (currentResolutionTransition == "" || currentResolutionTransition != "mobile"))
 			{
 				currentResolutionTransition = "mobile";
 				initVecTransitions();
@@ -25,7 +25,7 @@
 	
 	var attrVecTransition = "[data-vec~='transition']";
 	
-	var mobileDEResolution = 1023;
+	var mobileVecResolution = 1023;
 	var currentResolutionTransition = "";
 	
 	function initVecTransitions()
@@ -58,7 +58,7 @@
 	// Fonction permettant de vérifier la position des éléments qui doivent jouer une animation
 	function checkVecTransition()
 	{
-		/*if ($(window).width() > mobileDEResolution)
+		/*if ($(window).width() > mobileVecResolution)
 			transitionPlatform = "[data-vec-transition-desktop='true']";
 		else
 			transitionPlatform = "[data-vec-transition-mobile='true']";*/
@@ -115,7 +115,7 @@
 	function vecCheckResolution()
 	{
 		var transitionPlatformTxt;
-		if ($(window).width() > mobileDEResolution)
+		if ($(window).width() > mobileVecResolution)
 			transitionPlatformTxt = "[data-vec-transition-desktop='true']";
 		else
 			transitionPlatformTxt = "[data-vec-transition-mobile='true']";

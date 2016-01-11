@@ -56,7 +56,7 @@ new VecCarousel(
 	hasNavigation: true, // Si on active les boutons de navigation
 	isLooping: true, // Si on souhaite que le carrousel puisse boucler (mettre à true seulement si on ne met pas de timer)
 	timerDuration: 8000, // Durée du slide automatique, en millisecondes (mettre 0 ou ne pas renseigner pour qu'il n'y ait pas de slide automatique)
-	threshold: 100 // Distance en pixels que l'on doit parcourir au touch sur surface tactile pour déclencher un slide (50 par défaut)
+	threshold: 100, // Distance en pixels que l'on doit parcourir au touch sur surface tactile pour déclencher un slide (50 par défaut)
 	transition: "slide", // Type de transition (slide ou fade)
 	durationTransition: 500 // Durée (en millisecondes) de la durée de la transition
 });

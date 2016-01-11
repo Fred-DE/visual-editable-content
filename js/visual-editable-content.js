@@ -444,6 +444,9 @@ function cleanupContent(contentToCleanup)
 			jQuery(this).remove();
 	});
 	
+	// On enlève les attributs abp ajouté par Internet Explorer
+	jQuery(contentToCleanup).find("[abp]").removeAttr("abp");
+	
 	// console.log(jQuery(contentToCleanup).find("[data-vec~='txt']:eq(0)").contents().length);
 	// console.log(jQuery(contentToCleanup).find("[data-vec~='txt']:eq(0)").contents().eq(0).text());
 	// console.log(jQuery(contentToCleanup).find("[data-vec~='txt']:eq(0)").contents().eq(1).text());
