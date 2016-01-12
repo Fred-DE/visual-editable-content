@@ -75,6 +75,8 @@ var setVecLink;
 		tagsAssociation[0] = new Array();
 		tagsAssociation[0][0] = "bold";
 		tagsAssociation[0][1] = $("#vec-tmp > *").get(0).tagName.toLowerCase();
+		
+		
 
 		$("#vec-tmp").html($("#vec-tmp > "+ tagsAssociation[0][1]).text());
 		selectText("vec-tmp");
@@ -151,6 +153,14 @@ var setVecLink;
 		{
 			var selection = window.getSelection();
 			selection.setBaseAndExtent(text, 0, text, 1);
+		}
+		else
+		{
+			var selection = window.getSelection();
+			var range = document.createRange();
+			range.selectNodeContents(text);
+			selection.removeAllRanges();
+			selection.addRange(range);
 		}
 	}
 	
