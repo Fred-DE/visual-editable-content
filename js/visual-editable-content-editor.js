@@ -204,6 +204,8 @@ var setVecLink;
 			restoreSelection(savedSelection);
 			
 			document.execCommand("CreateLink", false, href);
+			
+			// console.log("CreateLink");
 		}
 		
 		// On clique sur le bouton de suppression d'un lien
@@ -261,10 +263,13 @@ var setVecLink;
 		var targetObserver = document.querySelector("#editor-vec");
 		var observer = new MutationObserver(function(mutations)
 		{
+			console.log("observer");
 			mutations.forEach(function(mutation)
 			{
+				console.log("mutation");
 				if (mutation.type === "childList")
 				{
+					console.log("childList");
 					if (typeof(mutation.addedNodes[0]) !== "undefined")
 					{
 						if (typeof(mutation.addedNodes[0].tagName) !== "undefined")
@@ -273,6 +278,8 @@ var setVecLink;
 							{
 								if (newLinkTarget != "")
 									$(mutation.addedNodes[0]).attr("target", newLinkTarget);
+								else
+									$(mutation.addedNodes[0]).removeAttr("target");
 							}
 							else if (mutation.addedNodes[0].tagName.toLowerCase() == "ul") // Si c'est une balise 'ul'
 							{
@@ -287,7 +294,8 @@ var setVecLink;
 		{
 			attributes: false,
 			childList: true,
-			characterData: false
+			characterData: false,
+			subtree: true
 		};
 		observer.observe(targetObserver, config);
 		
