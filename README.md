@@ -47,7 +47,7 @@ Tous les éléments constituant le carrousel doivent être entourés par une div
 
 L'initialisation du carrousel se fait en instanciant une classe VecCarousel. Exemple :
 ```javascript
-new VecCarousel(
+var vecCarousel = new VecCarousel(
 {
 	vecCarousel: "#id-carrousel", // id de la div contenant les éléments du carousel
 	nbItems: 3, // Nombre d'éléments par écran
@@ -61,6 +61,16 @@ new VecCarousel(
 	durationTransition: 500 // Durée (en millisecondes) de la durée de la transition
 });
 ```
+
+Possibilité d'écouter un événement veccarouselbuilt, déclenché lorsque les opérations pour construire le carousel sont terminées.
+```javascript
+$(vecCarousel).on("veccarouselbuilt", function()
+{
+	// TO DO
+});
+```
+
+
 
 ## À savoir
 

@@ -241,6 +241,8 @@
 		self.initEvents();
 		
 		self.vecCarouselAfterSlide();
+		
+		$(self).trigger("veccarouselbuilt"); // On déclenche un événement indiquant que le carousel est construit
 	};
 	
 	
