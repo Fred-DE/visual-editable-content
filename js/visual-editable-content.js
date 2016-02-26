@@ -222,7 +222,7 @@ function saveVisualEditableContent(data)
 	});
 	
 	// On remplace les éléments des carousels
-	jQuery(mainTextareaContent).find("#visual-editable-content-container-vec-content [data-vec~='carousel-container']").each(function(index)
+	jQuery(mainTextareaContent).find("#visual-editable-content-container-vec-content [data-vec~='carousel-container']:not([data-vec~='no-edit'])").each(function(index)
 	{
 		var carouselContent = "\n";
 		

@@ -44,6 +44,7 @@ Chaque élément doit avoir l'attribut data-vec="carousel-item".
 Si l'on souhaite ajouter des flèches pour faire tourner le carrousel, il faut ajouter des éléments avec les attributs data-vec="carousel-left-button" et data-vec="carousel-right-button".
 Si l'on souhaite ajouter une navigation (boutons correspondant chacun à un écran du carrousel), il faut ajouter un élément avec l'attribut data-vec="carousel-nav".
 Tous les éléments constituant le carrousel doivent être entourés par une div avec un id.
+Si le contenu du carousel est dynamique, et donc que l'on ne veut pas que l'on puisse l'éditer, ajouter la valeur 'no-edit' à l'attribut data-vec.
 
 L'initialisation du carrousel se fait en instanciant une classe VecCarousel. Exemple :
 ```javascript
