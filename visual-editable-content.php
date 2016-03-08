@@ -3,7 +3,7 @@
 		Plugin name: Visual Editable Content
 		Plugin URI: https://github.com/Fred-DE/visual-editable-content
 		Description: Permet d'éditer visuellement les éléments d'une page Wordpress.
-		Version: 1.3.17
+		Version: 1.4.0
 		Author: Digital Effervescence - Frédéric Le Crom
 		Author URI: http://digital-effervescence.com
 		License: GPL2
@@ -96,6 +96,69 @@
 	}
 	add_action('admin_menu', 'test_plugin_setup_menu');*/
 	
+	function visualeditablecontent_custom_admin_menu()
+	{
+		add_options_page
+		(
+			'Visual Editable Content',
+			'Visual Editable Content config',
+			'manage_options',
+			'visual-editable-content',
+			'visual_editable_content_config'
+		);
+	}
+	add_action('admin_menu', 'visualeditablecontent_custom_admin_menu');
+	
+	function visual_editable_content_config()
+	{
+		?>
+		<form action='options.php' method='post'>
+			<h2>Visual Editable Content</h2>
+			
+			<?php
+			settings_fields('pluginPage');
+			do_settings_sections('pluginPage');
+			submit_button();
+			?>
+			
+		</form>
+		<?php
+	}
+	
+	function visualeditablecontent_config_init()
+	{
+		register_setting('pluginPage', 'visual-editable-content_settings');
+
+		add_settings_section(
+			'visualeditablecontent_pluginPage_section', 
+			__('Configuration du plugin Visual Editable Content', 'visual-editable-content'), 
+			'visualeditableccontent_settings_section_callback', 
+			'pluginPage'
+		);
+
+		add_settings_field( 
+			'vec-visual-edit-date', 
+			__( 'Date à partir de laquelle on réactive l\'éditeur visuel pour les nouvelles pages (aaaa-mm-jj)', 'visual-editable-content' ), 
+			'visualeditablecontent_text_field_0_render', 
+			'pluginPage', 
+			'visualeditablecontent_pluginPage_section' 
+		);
+	}
+	add_action('admin_init', 'visualeditablecontent_config_init');
+
+	function visualeditableccontent_settings_section_callback( )
+	{ 
+		// echo __('Configuration du plugin Visual Editable Content', 'visual-editable-content');
+	}
+	
+	function visualeditablecontent_text_field_0_render()
+	{ 
+		$options = get_option('visual-editable-content_settings');
+		?>
+			<input type='text' name='visual-editable-content_settings[vec-visual-edit-date]' value='<?php echo $options['vec-visual-edit-date']; ?>'>
+		<?php
+	}
+	
 	
 	
 	
@@ -129,9 +192,13 @@
 	// Désactivation de l'éditeur visuel sur l'administration des pages
 	function disableVisualEditorPage($c)
 	{
-		global $post_type;
+		global $post_type, $post;
+		
+		$options = get_option('visual-editable-content_settings');
+		$postDate = new DateTime($post->post_date);
+		$endDate = new DateTime($options['vec-visual-edit-date'] ." 00:00:00");
 
-		if ("page" == $post_type)
+		if ("page" == $post_type && $postDate < $endDate)
 			return false;
 		
 		return $c;

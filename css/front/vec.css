@@ -118,6 +118,9 @@ span.font-size-50 {font-size: 50px;}
 .text-right {text-align: right;}
 .text-center {text-align: center;}
 
+.align-justify {text-align: justify;}
+.align-justify:after {content: ""; display: inline-block; width: 100%;}
+
 .p-no-margin-bottom p {margin-bottom: 0px;}
 
 
