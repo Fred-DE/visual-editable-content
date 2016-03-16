@@ -227,7 +227,7 @@ function saveVisualEditableContent(data)
 		var carouselContent = "\n";
 		
 		// On parcourt tous les éléments du carousel
-		jQuery(dataHtml).find("[data-vec~='carousel-container']:eq("+ index +") [data-vec='carousel-item']:not([data-vec-item-blank])").each(function()
+		jQuery(dataHtml).find("[data-vec~='carousel-container']:not([data-vec~='no-edit']):eq("+ index +") [data-vec='carousel-item']:not([data-vec-item-blank])").each(function()
 		{
 			var nodeWithGoodAttr = getHtmlWithGoodAttr(this);
 			
