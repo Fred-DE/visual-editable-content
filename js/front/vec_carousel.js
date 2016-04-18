@@ -19,7 +19,7 @@
 		this.hasArrows = arguments["hasArrows"] || false;
 		this.hasNavigation = arguments["hasNavigation"] || false;
 		if (typeof(arguments["isLooping"]) == "undefined")
-			this.isLooping = true
+			this.isLooping = true;
 		else
 			this.isLooping = arguments["isLooping"];
 		this.timerDuration = arguments["timerDuration"] || 0;
@@ -294,7 +294,7 @@
 		// On glisse le doigt sur mobile (si on a plusieurs écrans)
 		if ($(self.vecCarousel).find(".data-vec-carousel-screen-content").length > 1)
 		{
-			$(self.vecCarousel).off("touchstart");
+			/*$(self.vecCarousel).off("touchstart");
 			$(self.vecCarousel).on("touchstart", "[data-vec~='carousel-container']", function(event)
 			{
 				if ($(self.vecCarousel).find(".data-vec-carousel-screen-content").length > 1)
@@ -302,6 +302,19 @@
 			});
 			$(self.vecCarousel).off("touchmove");
 			$(self.vecCarousel).on("touchmove", "[data-vec~='carousel-container']", function(event)
+			{
+				if ($(self.vecCarousel).find(".data-vec-carousel-screen-content").length > 1)
+					self.vecCarouselTouchMove(event);
+			});*/
+			
+			$(self.vecCarousel).off("touchstart");
+			$(self.vecCarousel).on("touchstart", function(event)
+			{
+				if ($(self.vecCarousel).find(".data-vec-carousel-screen-content").length > 1)
+					self.vecCarouselTouchStart(event);
+			});
+			$(self.vecCarousel).off("touchmove");
+			$(self.vecCarousel).on("touchmove", function(event)
 			{
 				if ($(self.vecCarousel).find(".data-vec-carousel-screen-content").length > 1)
 					self.vecCarouselTouchMove(event);
@@ -420,6 +433,8 @@
 				
 				if (loop)
 					direction *= -1;
+				
+				$(self).trigger("veccarouselstartslide", [index, direction]); // On déclenche un événement indiquant que l'on change de slide, avec en paramètres l'index du nouveau slide et sa direction
 				
 				// On met à jour la navigation
 				$(self.vecCarousel).find("div[data-vec='carousel-nav'] .vec-carousel-nav-button").removeClass("active");
