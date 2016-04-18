@@ -19,13 +19,14 @@
 		this.hasArrows = arguments["hasArrows"] || false;
 		this.hasNavigation = arguments["hasNavigation"] || false;
 		if (typeof(arguments["isLooping"]) == "undefined")
-			this.isLooping = true;
+			this.isLooping = true
 		else
 			this.isLooping = arguments["isLooping"];
 		this.timerDuration = arguments["timerDuration"] || 0;
 		this.sliderThreshold = arguments["threshold"] || 50;
 		this.durationVecCarouselSlide = arguments["durationTransition"] || 600;
 		this.transition = arguments["transition"] || "slide";
+		this.direction = arguments["direction"] || "horizontal";
 		
 		VecCarousel.allInstances.push(this);
 		
@@ -294,7 +295,7 @@
 		// On glisse le doigt sur mobile (si on a plusieurs écrans)
 		if ($(self.vecCarousel).find(".data-vec-carousel-screen-content").length > 1)
 		{
-			/*$(self.vecCarousel).off("touchstart");
+			$(self.vecCarousel).off("touchstart");
 			$(self.vecCarousel).on("touchstart", "[data-vec~='carousel-container']", function(event)
 			{
 				if ($(self.vecCarousel).find(".data-vec-carousel-screen-content").length > 1)
@@ -302,19 +303,6 @@
 			});
 			$(self.vecCarousel).off("touchmove");
 			$(self.vecCarousel).on("touchmove", "[data-vec~='carousel-container']", function(event)
-			{
-				if ($(self.vecCarousel).find(".data-vec-carousel-screen-content").length > 1)
-					self.vecCarouselTouchMove(event);
-			});*/
-			
-			$(self.vecCarousel).off("touchstart");
-			$(self.vecCarousel).on("touchstart", function(event)
-			{
-				if ($(self.vecCarousel).find(".data-vec-carousel-screen-content").length > 1)
-					self.vecCarouselTouchStart(event);
-			});
-			$(self.vecCarousel).off("touchmove");
-			$(self.vecCarousel).on("touchmove", function(event)
 			{
 				if ($(self.vecCarousel).find(".data-vec-carousel-screen-content").length > 1)
 					self.vecCarouselTouchMove(event);
@@ -434,8 +422,6 @@
 				if (loop)
 					direction *= -1;
 				
-				$(self).trigger("veccarouselstartslide", [index, direction]); // On déclenche un événement indiquant que l'on change de slide, avec en paramètres l'index du nouveau slide et sa direction
-				
 				// On met à jour la navigation
 				$(self.vecCarousel).find("div[data-vec='carousel-nav'] .vec-carousel-nav-button").removeClass("active");
 				$(self.vecCarousel).find("div[data-vec='carousel-nav'] .vec-carousel-nav-button:eq("+ index +")").addClass("active");
@@ -461,9 +447,15 @@
 					$(self.vecCarousel).find("[data-vec-carousel-screen='"+ self.currentIndex +"']").css({"z-index": "1"});
 					$(self.vecCarousel).find("[data-vec-carousel-screen='"+ self.currentIndex +"']").animate({"opacity": "0"}, {duration: durationSlide, easing: "linear"});
 				}
-				else
+				else if (self.transition == "slide")
 				{
-					$(self.vecCarousel).find("[data-vec-carousel-screen='"+ index +"']").css({"left": (100 * direction) +"%"}); // On place l'écran à afficher sur un bord de l'écran (gauche ou droite, selon la direction du slide)
+					var directionSlide = "left";
+					if (self.direction == "horizontal")
+						directionSlide = "left";
+					else if (self.direction == "vertical")
+						directionSlide = "top";
+					
+					/*$(self.vecCarousel).find("[data-vec-carousel-screen='"+ index +"']").css({"left": (100 * direction) +"%"}); // On place l'écran à afficher sur un bord de l'écran (gauche ou droite, selon la direction du slide)
 					
 					$(self.vecCarousel).find("[data-vec-carousel-screen='"+ index +"']").animate({"left": "0px"}, {duration: durationSlide, easing: "linear", complete: function()
 					{
@@ -479,7 +471,35 @@
 						}
 					}});
 					
-					$(self.vecCarousel).find("[data-vec-carousel-screen='"+ self.currentIndex +"']").animate({"left": -(100 * direction) +"%"}, {duration: durationSlide, easing: "linear"});
+					$(self.vecCarousel).find("[data-vec-carousel-screen='"+ self.currentIndex +"']").animate({"left": -(100 * direction) +"%"}, {duration: durationSlide, easing: "linear"});*/
+					
+					var arrayCss = {};
+					arrayCss[directionSlide] = (100 * direction) +"%";
+					
+					var arrayAnimate1 = {};
+					arrayAnimate1[directionSlide] = "0px";
+					
+					var arrayAnimate2 = {};
+					arrayAnimate2[directionSlide] = -(100 * direction) +"%";
+					
+					// $(self.vecCarousel).find("[data-vec-carousel-screen='"+ index +"']").css({"left": (100 * direction) +"%"}); // On place l'écran à afficher sur un bord de l'écran (gauche ou droite, selon la direction du slide)
+					$(self.vecCarousel).find("[data-vec-carousel-screen='"+ index +"']").css(arrayCss); // On place l'écran à afficher sur un bord de l'écran (gauche ou droite, selon la direction du slide)
+					
+					$(self.vecCarousel).find("[data-vec-carousel-screen='"+ index +"']").animate(arrayAnimate1, {duration: durationSlide, easing: "linear", complete: function()
+					{
+						self.isAnimatingVecCarouselSlide = false;
+						self.currentIndex = index;
+						
+						self.vecCarouselAfterSlide();
+						
+						if (self.timerDuration != 0) // Si on a un timer, on le reset
+						{
+							clearInterval(self.timerInterval);
+							self.timerManager();
+						}
+					}});
+					
+					$(self.vecCarousel).find("[data-vec-carousel-screen='"+ self.currentIndex +"']").animate(arrayAnimate2, {duration: durationSlide, easing: "linear"});
 				}
 			}
 		}
