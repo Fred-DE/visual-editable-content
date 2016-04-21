@@ -60,7 +60,7 @@ var vecCarousel = new VecCarousel(
 	threshold: 100, // Distance en pixels que l'on doit parcourir au touch sur surface tactile pour déclencher un slide (50 par défaut)
 	transition: "slide", // Type de transition (slide ou fade)
 	durationTransition: 500, // Durée (en millisecondes) de la durée de la transition
-	direction: "horizontal", // Direction d'animation (horizontal ou vertical)
+	direction: "horizontal" // Direction d'animation (horizontal ou vertical)
 });
 ```
 
@@ -71,6 +71,13 @@ $(vecCarousel).on("veccarouselbuilt", function()
 	// TO DO
 });
 ```
+
+Également possibilité d'écouter un événement veccarouselstartslide, déclenché lorsque l'on change de slide. On peut récupérer l'index du slide qui va être affiché ainsi que la direction (-1 ou 1)
+```javascript
+$(vecCarousel).on("veccarouselstartslide", function(event, indexSlide, directionSlide)
+{
+	// TO DO
+});
 
 
 
