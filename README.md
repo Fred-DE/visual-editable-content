@@ -78,7 +78,7 @@ $(vecCarousel).on("veccarouselstartslide", function(event, indexSlide, direction
 {
 	// TO DO
 });
-
+```
 
 
 ## À savoir

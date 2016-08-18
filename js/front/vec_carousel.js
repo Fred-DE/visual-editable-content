@@ -19,7 +19,7 @@
 		this.hasArrows = arguments["hasArrows"] || false;
 		this.hasNavigation = arguments["hasNavigation"] || false;
 		if (typeof(arguments["isLooping"]) == "undefined")
-			this.isLooping = true
+			this.isLooping = true;
 		else
 			this.isLooping = arguments["isLooping"];
 		this.timerDuration = arguments["timerDuration"] || 0;
@@ -421,6 +421,8 @@
 				
 				if (loop)
 					direction *= -1;
+				
+				$(self).trigger("veccarouselstartslide", [index, direction]); // On déclenche un événement indiquant que l'on change de slide, avec en paramètres l'index du nouveau slide et sa direction
 				
 				// On met à jour la navigation
 				$(self.vecCarousel).find("div[data-vec='carousel-nav'] .vec-carousel-nav-button").removeClass("active");
