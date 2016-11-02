@@ -3,7 +3,7 @@
 		Plugin name: Visual Editable Content
 		Plugin URI: https://github.com/Fred-DE/visual-editable-content
 		Description: Permet d'éditer visuellement les éléments d'une page Wordpress.
-		Version: 1.4.6
+		Version: 1.4.7
 		Author: Digital Effervescence - Frédéric Le Crom
 		Author URI: http://digital-effervescence.com
 		License: GPL2
@@ -196,14 +196,17 @@
 	{
 		global $post_type, $post;
 		
-		$options = get_option('visual-editable-content_settings');
-		$postDate = new DateTime($post->post_date);
-		$endDate = new DateTime($options['vec-visual-edit-date'] ." 00:00:00");
+		if ($post)
+		{
+			$options = get_option('visual-editable-content_settings');
+			$postDate = new DateTime($post->post_date);
+			$endDate = new DateTime($options['vec-visual-edit-date'] ." 00:00:00");
 
-		if ("page" == $post_type && $postDate < $endDate)
-			return false;
-		
-		return $c;
+			if ("page" == $post_type && $postDate < $endDate)
+				return false;
+			
+			return $c;
+		}
 	}
 	add_filter("user_can_richedit", "disableVisualEditorPage");
 
