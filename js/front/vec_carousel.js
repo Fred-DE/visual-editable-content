@@ -27,6 +27,7 @@
 		this.durationVecCarouselSlide = arguments["durationTransition"] || 600;
 		this.transition = arguments["transition"] || "slide";
 		this.direction = arguments["direction"] || "horizontal";
+		this.screenHeightOffset = arguments["screenHeightOffset"] || 0;
 		
 		VecCarousel.allInstances.push(this);
 		
@@ -182,6 +183,9 @@
 			if ($(this).height() > maxHeightCarouselScreen)
 				maxHeightCarouselScreen = $(this).height();
 		});
+		
+		maxHeightCarouselScreen += this.screenHeightOffset;
+		
 		$(self.vecCarousel).find("div[data-vec~='carousel-container']").css({"height": maxHeightCarouselScreen +"px"});
 		$(self.vecCarousel).find("div[data-vec-carousel-screen]").css({"height": "100%"});
 		

@@ -60,7 +60,8 @@ var vecCarousel = new VecCarousel(
 	threshold: 100, // Distance en pixels que l'on doit parcourir au touch sur surface tactile pour déclencher un slide (50 par défaut)
 	transition: "slide", // Type de transition (slide ou fade)
 	durationTransition: 500, // Durée (en millisecondes) de la durée de la transition
-	direction: "horizontal" // Direction d'animation (horizontal ou vertical)
+	direction: "horizontal", // Direction d'animation (horizontal ou vertical)
+	screenHeightOffset: 20 // Hauteur à ajouter à la hauteur calculée du carousel
 });
 ```
 
