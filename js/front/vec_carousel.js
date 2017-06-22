@@ -23,6 +23,7 @@
 		else
 			this.isLooping = arguments["isLooping"];
 		this.timerDuration = arguments["timerDuration"] || 0;
+		this.stopOnMouseOver = arguments["stopOnMouseOver"] || false;
 		this.sliderThreshold = arguments["threshold"] || 50;
 		this.durationVecCarouselSlide = arguments["durationTransition"] || 600;
 		this.transition = arguments["transition"] || "slide";
@@ -30,6 +31,8 @@
 		this.screenHeightOffset = arguments["screenHeightOffset"] || 0;
 		
 		VecCarousel.allInstances.push(this);
+		
+		console.log(this.stopOnMouseOver);
 		
 		this.currentIndex = 0;
 		this.isAnimatingVecCarouselSlide = false;
@@ -164,7 +167,7 @@
 			$(this).attr("data-vec-carousel-screen-tmp", currentScreen);
 		});
 		
-		// On place les item du carousel dans un container qui servira d'écran, et on supprime l'aatribut temporaire créé juste avant
+		// On place les items du carousel dans un container qui servira d'écran, et on supprime l'attribut temporaire créé juste avant
 		for (var i = 0; i <= currentScreen; i++)
 		{
 			$(self.vecCarousel).find("[data-vec-carousel-screen-tmp='"+ i +"']").wrapAll('<div data-vec-carousel-screen="'+ i +'" /></div>');
@@ -543,7 +546,7 @@
 		
 		self.timerInterval = setInterval(function()
 		{
-			if (!$(self.vecCarousel +":hover").length > 0) // Si le curseur est sur le carousel, on ne lance pas le slide
+			if (!$(self.vecCarousel +":hover").length > 0 || !self.stopOnMouseOver) // Si le curseur est sur le carousel, on ne lance pas le slide
 			{
 				self.vecCarouselBeforeSlide("right");
 				

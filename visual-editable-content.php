@@ -3,7 +3,7 @@
 		Plugin name: Visual Editable Content
 		Plugin URI: https://github.com/Fred-DE/visual-editable-content
 		Description: Permet d'éditer visuellement les éléments d'une page Wordpress.
-		Version: 1.4.8
+		Version: 1.5.0
 		Author: Digital Effervescence - Frédéric Le Crom
 		Author URI: http://digital-effervescence.com
 		License: GPL2
