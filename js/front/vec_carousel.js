@@ -32,8 +32,6 @@
 		
 		VecCarousel.allInstances.push(this);
 		
-		console.log(this.stopOnMouseOver);
-		
 		this.currentIndex = 0;
 		this.isAnimatingVecCarouselSlide = false;
 		

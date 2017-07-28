@@ -1,10 +1,14 @@
 /*
-	data-vec~="transition"
-	data-vec-transition~="top"
-	data-vec-transition-delay="100"
-	data-vec-transition-desktop="true"
-	data-vec-transition-mobile="false"
-	data-vec-transition-reset="true"
+	data-vec="transition"
+	data-vec-transition="top" // Le type d'animation
+	data-vec-transition-delay="100" // Délai avant de jouer l'animation (en millisecondes)
+	data-vec-transition-desktop="true" // Si oui ou non on joue l'animation sur desktop (> 1023px)
+	data-vec-transition-mobile="true" // Si oui ou non on joue l'animation sur mobile (<= 1023px)
+	data-vec-transition-direct="true" // On joue l'animation directement à l'ouverture de la page
+	data-vec-transition-reset="true" // On rejoue l'animation si l'on scroll à nouveau au niveau du bloc
+	
+	data-vec-transition-rel-trigger="nom-relation-transition" // Pour lancer l'animation par rapport à un autre élément
+	data-vec-transition-rel="nom-relation-transition" // Cet autre élément (la valeur doit être la même)
 */
 
 
@@ -28,8 +32,8 @@ div[data-vec~='carousel-container'] div[data-vec-carousel-screen]:first-child {l
 
 .vec-carousel-slide-button {display: inline-block; vertical-align: middle; width: 33px; height: 81px; cursor: pointer;}
 .vec-carousel-slide-button.hidden {visibility: hidden;}
-.vec-carousel-slide-button[data-vec~='carousel-left-button'] {background: transparent url(../../images/buttons/carousel_arrow_left.png) no-repeat center top; margin-right: 50px;}
-.vec-carousel-slide-button[data-vec~='carousel-right-button'] {background: transparent url(../../images/buttons/carousel_arrow_right.png) no-repeat center top; margin-left: 50px;}
+.vec-carousel-slide-button[data-vec~='carousel-left-button'] {/*background: transparent url(../../images/buttons/carousel_arrow_left.png) no-repeat center top;*/ margin-right: 50px;}
+.vec-carousel-slide-button[data-vec~='carousel-right-button'] {/*background: transparent url(../../images/buttons/carousel_arrow_right.png) no-repeat center top;*/ margin-left: 50px;}
 .vec-carousel-slide-button:hover {background-position: center bottom;}
 
 div[data-vec~='carousel-container'] div[data-vec-item-blank] {visibility: hidden;}

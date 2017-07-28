@@ -89,11 +89,11 @@ Il est déconseillé d'utiliser des balises ```<script>``` dans les pages WordPr
 Pas de problème avec les balises ```<style>``` (même si c'est toujours mieux d'éviter d'en mettre dans le HTML).
 
 Pour l'utilisation de l'éditeur dans l'admin :
-Lancer l'éditeur visuel en cliquant sur le bouton 'Afficher' dans la zone du module 'Visual Editable Content';
+Lancer l'éditeur visuel en cliquant sur le bouton 'Afficher' dans la zone du module 'Visual Editable Content'.
 Il ne faut faire de modifications dans la zone d'édition de WordPress ni avant, ni pendant que l'on utilise l'éditeur visuel pour ne pas créer de conflits.
 Lorsque l'on enregistre les modifications faites dans l'éditeur visuel, ce dernier se ferme pour empêcher que l'on fasse de nouvelles modifications à l'intérieur
 (possibilité d'erreurs dues à la création d'attributs temporaires).
-Enregister ses modifications depuis l'éditeur visuel ne fait que mettre à jour le code dans la zone d'édition (le textarea) de d'admin de WordPress. Penser à mettre à jour la page
+Enregistrer ses modifications depuis l'éditeur visuel ne fait que mettre à jour le code dans la zone d'édition (le textarea) de d'admin de WordPress. Penser à mettre à jour la page
 avec le bouton 'Mettre à jour' de WordPress, pour enregistrer les modifications.
 
 
