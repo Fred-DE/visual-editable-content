@@ -217,7 +217,7 @@
 		}
 		else
 		{
-			$(self.vecCarousel).find(".vec-carousel-slide-button").css({"display": "none"});
+			$(self.vecCarousel).find(".vec-carousel-slide-button").css({"display": "none"}).addClass("hidden");
 		}
 		
 		// Navigation
@@ -241,7 +241,7 @@
 		}
 		else
 		{
-			$(self.vecCarousel).find("[data-vec='carousel-nav']").css({"display": "none"});
+			$(self.vecCarousel).find("[data-vec='carousel-nav']").css({"display": "none"}).addClass("hidden");
 		}
 		
 		self.initEvents();

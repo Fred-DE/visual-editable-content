@@ -7,8 +7,8 @@
 	data-vec-transition-direct="true" // On joue l'animation directement à l'ouverture de la page
 	data-vec-transition-reset="true" // On rejoue l'animation si l'on scroll à nouveau au niveau du bloc
 	
-	data-vec-transition-rel-trigger="nom-relation-transition" // Pour lancer l'animation par rapport à un autre élément
-	data-vec-transition-rel="nom-relation-transition" // Cet autre élément (la valeur doit être la même)
+	data-vec-transition-rel-trigger="nom-relation-transition" // Pour lancer l'animation par rapport à cet élément
+	data-vec-transition-rel="nom-relation-transition" // L'élément dont l'animation se déclenche par rapport au 1er (la valeur doit être la même)
 */
 
 
@@ -54,6 +54,8 @@ div[data-vec~='carousel-nav'].points .vec-carousel-nav-button .shape {background
 /*div[data-vec~='carousel-nav'].grey .vec-carousel-nav-button .shape {background-color: #A7A8AA;}*/
 div[data-vec~='carousel-nav'].points .vec-carousel-nav-button.active .shape,
 div[data-vec~='carousel-nav'].points .vec-carousel-nav-button:hover .shape {background-color: #FFFFFF; border: 6px solid #EDEDEE;}
+
+div[data-vec~='carousel-nav'].hidden {visibility: hidden;}
 
 
 
