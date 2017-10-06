@@ -132,7 +132,7 @@
 			$(self.vecCarousel).css({"visibility": "visible"});
 			self.setVecCarousel();
 		}
-	}
+	};
 	
 	
 	// Méthode permettant d'initialiser le carousel
@@ -248,7 +248,9 @@
 		
 		self.vecCarouselAfterSlide();
 		
-		$(self).trigger("veccarouselbuilt"); // On déclenche un événement indiquant que le carousel est construit
+		setTimeout(function () {
+            $(self).trigger("veccarouselbuilt"); // On déclenche un événement indiquant que le carousel est construit
+        }, 0);
 	};
 	
 	
