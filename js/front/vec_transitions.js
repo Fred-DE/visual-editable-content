@@ -1,21 +1,16 @@
 /**
-	Script gérant les animations de transition.
+	Script gÃ©rant les animations de transition.
 */
 
-(function($)
+(function ($)
 {
-	$(window).load(function()
-	{
+	$(window).load(function () {
 		initVecTransitions();
-		$(window).resize(function()
-		{
-			if ($(window).width() > mobileVecResolution && (currentResolutionTransition == "" || currentResolutionTransition != "desktop"))
-			{
+		$(window).resize(function () {
+			if ($(window).width() > mobileVecResolution && (currentResolutionTransition == "" || currentResolutionTransition != "desktop")) {
 				currentResolutionTransition = "desktop";
 				initVecTransitions();
-			}
-			else if ($(window).width() <= mobileVecResolution && (currentResolutionTransition == "" || currentResolutionTransition != "mobile"))
-			{
+			} else if ($(window).width() <= mobileVecResolution && (currentResolutionTransition == "" || currentResolutionTransition != "mobile")) {
 				currentResolutionTransition = "mobile";
 				initVecTransitions();
 			}
@@ -31,7 +26,7 @@
 	function initVecTransitions()
 	{
 		var transitionPlatform = vecCheckResolution();
-		/*$("[data-vec-transition-direct='true']"+ transitionPlatform).each(function()
+		/*$("[data-vec-transition-direct='true']"+ transitionPlatform).each(function ()
 		{
 			delay = $(this).attr("data-vec-transition-delay");
 			if (typeof(delay) == "undefined")
@@ -41,21 +36,20 @@
 		});*/
 		vecDelayManager(transitionPlatform);
 		
-		$("[data-vec-transition-direct='true']"+ transitionPlatform).addClass("transition"); // On joue l'animation directement pour ceux-là
+		$("[data-vec-transition-direct='true']"+ transitionPlatform).addClass("transition"); // On joue l'animation directement pour ceux-lÃ 
 		
 		
-		// Événement sur le scroll
+		// Ã‰vÃ©nement sur le scroll
 		checkVecTransition();
 		// $(window).off("scroll");
-		$(window).on("scroll", function()
-		{
+		$(window).on("scroll", function () {
 			checkVecTransition();
 			
 			checkVecReset();
 		});
 	}
 	
-	// Fonction permettant de vérifier la position des éléments qui doivent jouer une animation
+	// Fonction permettant de vÃ©rifier la position des Ã©lÃ©ments qui doivent jouer une animation
 	function checkVecTransition()
 	{
 		/*if ($(window).width() > mobileVecResolution)
@@ -65,22 +59,19 @@
 		
 		var transitionPlatform = vecCheckResolution();
 		
-		// $(attrVecTransition + transitionPlatform +":not(.transition):not([data-vec-transition-direct='true'])").each(function()
-		$(attrVecTransition + transitionPlatform +":not(.transition):not([data-vec-transition-direct='true']):not([data-vec-transition-rel])").each(function()
-		{
+		// $(attrVecTransition + transitionPlatform +":not(.transition):not([data-vec-transition-direct='true'])").each(function ()
+		$(attrVecTransition + transitionPlatform +":not(.transition):not([data-vec-transition-direct='true']):not([data-vec-transition-rel])").each(function () {
 			// var offsetForTopComingTop = $(window).height() / 2.3;
 			// var offsetForTopComingBottom = $(window).height() / 2.3;
 			var offsetForTopComingTop = 100;
 			var offsetForTopComingBottom = 100;
-			/*if ($(this).attr("data-vec-transition") == "top" || $(this).attr("data-vec-transition") == "top-small")
-			{
+			/*if ($(this).attr("data-vec-transition") == "top" || $(this).attr("data-vec-transition") == "top-small") {
 				
 				// offsetForTopComingTop -= $(this).css("translateY");
 				// offsetForTopComingTop = $(window).height() / 2;
 				// offsetForTopComingBottom = $(window).height() / 9;
 			}
-			if ($(this).attr("data-vec-transition") == "bottom" || $(this).attr("data-vec-transition") == "bottom-small")
-			{
+			if ($(this).attr("data-vec-transition") == "bottom" || $(this).attr("data-vec-transition") == "bottom-small") {
 				// var matrix = new WebKitCSSMatrix($(this).css("transform"));
 				
 				// offsetForTopComingTop = 100;
@@ -88,8 +79,7 @@
 			}*/
 			
 			var matrix = $(this).css("transform");
-			if (typeof(matrix) != "undefined" && matrix != "none")
-			{
+			if (typeof(matrix) != "undefined" && matrix != "none") {
 				var translateY = parseInt(matrix.split(',')[5]) *1;
 				
 				offsetForTopComingTop += translateY;
@@ -101,13 +91,13 @@
 			// console.log(offsetForTopComingBottom);
 			
 			// if (($(this).offset().top + $(this).height()) > ($(window).scrollTop() + offsetForTopComingTop) && $(this).offset().top < ($(window).scrollTop() + $(window).height() - offsetForTopComingBottom))
-			if (($(this).offset().top + $(this).height()) > ($(window).scrollTop() + offsetForTopComingTop) && ($(this).offset().top + paddingTop) < ($(window).scrollTop() + $(window).height() - offsetForTopComingBottom))
-			{
+			if (($(this).offset().top + $(this).height()) > ($(window).scrollTop() + offsetForTopComingTop) && ($(this).offset().top + paddingTop) < ($(window).scrollTop() + $(window).height() - offsetForTopComingBottom)) {
 				$(this).addClass("transition");
 				
-				// Si on a un élément qui doit s'animer en même temps que l'élément courant
-				if (typeof ($(this).attr("data-vec-transition-rel-trigger")) != "undefined")
+				// Si on a un Ã©lÃ©ment qui doit s'animer en mÃªme temps que l'Ã©lÃ©ment courant
+				if (typeof ($(this).attr("data-vec-transition-rel-trigger")) != "undefined") {
 					$("[data-vec-transition-rel='"+ $(this).attr("data-vec-transition-rel-trigger") +"']").addClass("transition");
+                }
 			}
 		});
 	}
@@ -115,35 +105,34 @@
 	function vecCheckResolution()
 	{
 		var transitionPlatformTxt;
-		if ($(window).width() > mobileVecResolution)
+		if ($(window).width() > mobileVecResolution) {
 			transitionPlatformTxt = "[data-vec-transition-desktop='true']";
-		else
+		} else {
 			transitionPlatformTxt = "[data-vec-transition-mobile='true']";
+        }
 		
 		return transitionPlatformTxt;
 	}
 	
-	// Fonction permettant de gérer un délai avant l'animation (s'il y en a un)
+	// Fonction permettant de gÃ©rer un dÃ©lai avant l'animation (s'il y en a un)
 	function vecDelayManager(transitionPlatform)
 	{
-		$(attrVecTransition + transitionPlatform).each(function()
-		{
+		$(attrVecTransition + transitionPlatform).each(function () {
 			var delay = $(this).attr("data-vec-transition-delay");
-			if (typeof(delay) == "undefined")
+			if (typeof(delay) == "undefined") {
 				delay = 0;
-			else
+			} else {
 				$(this).css({"transition-delay": delay +"ms"});
+            }
 		});
 	}
 	
 	
-	// Fonction permettant de réinitialiser les animations que l'on autorise à se rejouer si elles se retrouvent à nouveau sous le scroll
+	// Fonction permettant de rÃ©initialiser les animations que l'on autorise Ã  se rejouer si elles se retrouvent Ã  nouveau sous le scroll
 	function checkVecReset()
 	{
-		$(attrVecTransition +".transition[data-vec-transition-reset='true']:not([data-vec-transition-direct='true'])").each(function()
-		{
-			if (($(this).offset().top > $(window).scrollTop() + $(window).height() + 50))
-			{
+		$(attrVecTransition +".transition[data-vec-transition-reset='true']:not([data-vec-transition-direct='true'])").each(function () {
+			if (($(this).offset().top > $(window).scrollTop() + $(window).height() + 50)) {
 				$(this).removeClass("transition");
 			}
 		});
