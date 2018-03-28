@@ -55,8 +55,6 @@ div[data-vec~='carousel-nav'].points .vec-carousel-nav-button .shape {background
 div[data-vec~='carousel-nav'].points .vec-carousel-nav-button.active .shape,
 div[data-vec~='carousel-nav'].points .vec-carousel-nav-button:hover .shape {background-color: #FFFFFF; border: 6px solid #EDEDEE;}
 
-div[data-vec~='carousel-nav'].hidden {visibility: hidden;}
-
 
 
 
@@ -128,6 +126,11 @@ span.font-size-50 {font-size: 50px;}
 .align-justify:after {content: ""; display: inline-block; width: 100%;}
 
 .p-no-margin-bottom p {margin-bottom: 0px;}
+
+.display-none {display: none;}
+.display-none-important {display: none !important;}
+.visibility-hidden {visibility: hidden;}
+.visibility-hidden-important {visibility: hidden !important;}
 
 
 #editor-vec b,

@@ -21,7 +21,12 @@
 			this.isLooping = true;
 		} else {
 			this.isLooping = arguments["isLooping"];
-        }
+		}
+		if (typeof(arguments["allowJumpSlide"]) == "undefined") {
+			this.allowJumpSlide = true;
+		} else {
+			this.allowJumpSlide = arguments["allowJumpSlide"];
+		}
 		this.timerDuration = arguments["timerDuration"] || 0;
 		this.stopOnMouseOver = arguments["stopOnMouseOver"] || false;
 		this.sliderThreshold = arguments["threshold"] || 50;
@@ -277,7 +282,16 @@
 		// Clic sur la navigation
 		$(self.vecCarousel).off("click", ".vec-carousel-nav-button:not(.active)");
 		$(self.vecCarousel).on("click", ".vec-carousel-nav-button:not(.active)", function () {
-			self.vecCarouselSlide($(this).index(), false);
+			var newIndex = $(this).index();
+			if (!self.allowJumpSlide) {
+				if ($(this).index() > self.currentIndex) {
+					newIndex = self.currentIndex + 1;
+				} else {
+					newIndex = self.currentIndex - 1;
+				}
+			}
+
+			self.vecCarouselSlide(newIndex, false);
 		});
 		
 		
@@ -423,8 +437,7 @@
 						
 						self.vecCarouselAfterSlide();
 						
-						if (self.timerDuration != 0) // Si on a un timer, on le reset
-						{
+						if (self.timerDuration != 0) { // Si on a un timer, on le reset
 							clearInterval(self.timerInterval);
 							self.timerManager();
 						}

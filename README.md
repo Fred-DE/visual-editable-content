@@ -56,6 +56,7 @@ var vecCarousel = new VecCarousel(
 	hasArrows: false, // Si on active les flèches
 	hasNavigation: true, // Si on active les boutons de navigation
 	isLooping: true, // Si on souhaite que le carrousel puisse boucler (mettre à true seulement si on ne met pas de timer)
+	allowJumpSlide: true, // Si on permet au slider de sauter des slides (au clic sur la navigation)
 	timerDuration: 8000, // Durée du slide automatique, en millisecondes (mettre 0 ou ne pas renseigner pour qu'il n'y ait pas de slide automatique)
 	stopOnMouseOver: true, // Si on stoppe le slide dans le cas où la souris survole le carrousel
 	threshold: 100, // Distance en pixels que l'on doit parcourir au touch sur surface tactile pour déclencher un slide (50 par défaut)
